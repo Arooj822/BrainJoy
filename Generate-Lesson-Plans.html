@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Generate Lesson Plan</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: auto;
+    background: #f9f9f9;
+    padding: 20px;
+    color: #222;
+  }
+  h1 {
+    color: #3b44f6;
+    text-align: center;
+  }
+  label {
+    font-weight: bold;
+    margin-top: 15px;
+    display: block;
+  }
+  input[type="text"],
+  input[type="number"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid #bbb;
+    font-size: 14px;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+  .instructions {
+    font-size: 0.9em;
+    color: #555;
+    font-style: italic;
+    margin-top: 2px;
+    margin-bottom: 10px;
+  }
+  button {
+    margin-top: 20px;
+    background-color: #3b44f6;
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #2f35c8;
+  }
+  #lessonPlanPreview {
+    white-space: pre-wrap;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 30px;
+    min-height: 250px;
+    border-radius: 6px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .flex-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  .flex-grow {
+    flex-grow: 1;
+  }
+</style>
+</head>
+<body>
+
+<h1>Lesson Plan Generator</h1>
+
+<form id="lessonPlanForm">
+
+  <label for="classGrade">Class / Grade</label>
+  <div class="instructions">Tell us the grade or standard of your class (e.g., Grade 10, Year 5)</div>
+  <input type="text" id="classGrade" name="classGrade" required placeholder="Enter the class or grade" />
+
+  <label for="subject">Subject</label>
+  <div class="instructions">What subject is this lesson plan for? (e.g., Chemistry, Math)</div>
+  <input type="text" id="subject" name="subject" required placeholder="Enter the subject" />
+
+  <label for="learningObjectives">Learning Objectives</label>
+  <div class="instructions">Describe what students should learn. Just tell us what you want AI to generate based on your input.</div>
+  <textarea id="learningObjectives" name="learningObjectives" required placeholder="E.g., Students will understand photosynthesis..."></textarea>
+
+  <label for="successCriteria">Success Criteria</label>
+  <div class="instructions">Tell us how students can show they've succeeded in this lesson.</div>
+  <textarea id="successCriteria" name="successCriteria" required placeholder="E.g., Students can explain..."></textarea>
+
+  <label for="bloomsTaxonomy">Bloom's Taxonomy Level</label>
+  <div class="instructions">Tell us which cognitive skill level you want: Remember, Understand, Apply, Analyze, Evaluate, Create</div>
+  <select id="bloomsTaxonomy" name="bloomsTaxonomy" required>
+    <option value="">-- Select Bloom's Level --</option>
+    <option>Remember</option>
+    <option>Understand</option>
+    <option>Apply</option>
+    <option>Analyze</option>
+    <option>Evaluate</option>
+    <option>Create</option>
+  </select>
+
+  <label for="dokLevel">Depth of Knowledge (DOK) Level</label>
+  <div class="instructions">Choose the DOK level (1 to 4) based on lesson complexity.</div>
+  <select id="dokLevel" name="dokLevel" required>
+    <option value="">-- Select DOK Level --</option>
+    <option value="1">1 - Recall and Reproduction</option>
+    <option value="2">2 - Skills and Concepts</option>
+    <option value="3">3 - Strategic Thinking</option>
+    <option value="4">4 - Extended Thinking</option>
+  </select>
+
+  <label for="realLifeApplications">Real-Life Applications</label>
+  <div class="instructions">Tell us what real-life skills or applications you want included. Just describe your needs, and AI will generate ideas accordingly.</div>
+  <textarea id="realLifeApplications" name="realLifeApplications" placeholder="E.g., Applying photosynthesis knowledge to gardening"></textarea>
+
+  <label for="horizontalAlignment">Horizontal Alignment</label>
+  <div class="instructions">Tell us which other subjects or units this lesson aligns with at the same grade level.</div>
+  <textarea id="horizontalAlignment" name="horizontalAlignment" placeholder="E.g., Science and Environmental Studies"></textarea>
+
+  <label for="verticalAlignment">Vertical Alignment</label>
+  <div class="instructions">Tell us how this lesson builds on prior learning or leads to future units.</div>
+  <textarea id="verticalAlignment" name="verticalAlignment" placeholder="E.g., Builds on plant biology from Grade 9"></textarea>
+
+  <label for="aflCount">Number of AFL (Assessment for Learning) questions</label>
+  <div class="instructions">How many AFL questions do you want included? Describe the type or style if needed.</div>
+  <input type="number" id="aflCount" name="aflCount" min="0" value="2" />
+
+  <label for="aflDescription">AFL Questions Instructions</label>
+  <div class="instructions">Tell us how you want to challenge the students with AFL questions. Just describe, and AI will generate accordingly.</div>
+  <textarea id="aflDescription" name="aflDescription" placeholder="E.g., Short answer questions on key concepts"></textarea>
+
+  <label for="challengeCount">Number of Challenge Questions</label>
+  <div class="instructions">How many challenge questions do you want to include? Describe your preferred style.</div>
+  <input type="number" id="challengeCount" name="challengeCount" min="0" value="1" />
+
+  <label for="challengeDescription">Challenge Questions Instructions</label>
+  <div class="instructions">Describe how you want to challenge your students beyond AFLs.</div>
+  <textarea id="challengeDescription" name="challengeDescription" placeholder="E.g., Open-ended questions requiring critical thinking"></textarea>
+
+  <label for="activitiesType">Activities Type</label>
+  <div class="instructions">What type of activities will you include? (Experiment-based, discussion, group work, project, etc.) Describe your preferences.</div>
+  <textarea id="activitiesType" name="activitiesType" placeholder="E.g., Hands-on experiments and group discussion"></textarea>
+
+  <label for="extraInstructions">Other Instructions</label>
+  <div class="instructions">Any other special instructions or details you'd like included in the lesson plan?</div>
+  <textarea id="extraInstructions" name="extraInstructions" placeholder="Additional info or requests"></textarea>
+
+  <label for="templateUpload">Upload Your Lesson Plan Template (optional)</label>
+  <div class="instructions">Upload a plain text (.txt) template with placeholders like {{subject}}, {{learningObjectives}}, etc. AI will fill it with your inputs.</div>
+  <input type="file" id="templateUpload" name="templateUpload" accept=".txt" />
+
+  <button type="submit">Generate Lesson Plan</button>
+</form>
+
+<h2>Generated Lesson Plan Preview:</h2>
+<pre id="lessonPlanPreview">Your lesson plan will appear here after submission.</pre>
+
+<button id="downloadBtn" style="display:none;">Download Lesson Plan as .txt</button>
+
+<script>
+  const form = document.getElementById('lessonPlanForm');
+  const preview = document.getElementById('lessonPlanPreview');
+  const downloadBtn = document.getElementById('downloadBtn');
+  let generatedText = '';
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Gather all form inputs
+    const data = new FormData(form);
+
+    // Convert to simple object for easier usage
+    const inputs = {};
+    data.forEach((v,k) => inputs[k] = v.trim());
+
+    // Read uploaded template if any
+    let templateText = null;
+    const file = data.get('templateUpload');
+    if (file && file.name) {
+      templateText = await file.text();
+    }
+
+    // Function to safely replace placeholders in template
+    function fillTemplate(template, values) {
+      return template.replace(/{{\s*(\w+)\s*}}/g, (match, p1) => {
+        return values[p1] || `[${p1} not provided]`;
+      });
+    }
+
+    // If template uploaded, fill and show
+    if(templateText) {
+      generatedText = fillTemplate(templateText, {
+        classGrade: inputs.classGrade,
+        subject: inputs.subject,
+        learningObjectives: inputs.learningObjectives,
+        successCriteria: inputs.successCriteria,
+        bloomsTaxonomy: inputs.bloomsTaxonomy,
+        dokLevel: inputs.dokLevel,
+        realLifeApplications: inputs.realLifeApplications || 'Not provided',
+        horizontalAlignment: inputs.horizontalAlignment || 'Not provided',
+        verticalAlignment: inputs.verticalAlignment || 'Not provided',
+        aflCount: inputs.aflCount || '0',
+        aflDescription: inputs.aflDescription || 'Not provided',
+        challengeCount: inputs.challengeCount || '0',
+        challengeDescription: inputs.challengeDescription || 'Not provided',
+        activitiesType: inputs.activitiesType || 'Not provided',
+        extraInstructions: inputs.extraInstructions || 'None'
+      });
+    } else {
+      // If no template, generate default lesson plan text
+
+      generatedText =
+`Lesson Plan for ${inputs.subject} - Class: ${inputs.classGrade}
+
+Learning Objectives:
+${inputs.learningObjectives}
+
+Success Criteria:
+${inputs.successCriteria}
+
+Bloom's Taxonomy Level:
+${inputs.bloomsTaxonomy}
+
+Depth of Knowledge (DOK) Level:
+${inputs.dokLevel}
+
+Real-Life Applications:
+${inputs.realLifeApplications || 'Not provided'}
+
+Horizontal Alignment:
+${inputs.horizontalAlignment || 'Not provided'}
+
+Vertical Alignment:
+${inputs.verticalAlignment || 'Not provided'}
+
+Assessment for Learning (AFL):
+Number of AFL Questions: ${inputs.aflCount}
+AFL Instructions: ${inputs.aflDescription || 'Not provided'}
+
+Challenge Questions:
+Number of Challenge Questions: ${inputs.challengeCount}
+Challenge Instructions: ${inputs.challengeDescription || 'Not provided'}
+
+Activities Type:
+${inputs.activitiesType || 'Not provided'}
+
+Other Instructions:
+${inputs.extraInstructions || 'None'}
+
+---
+
+Generated by Lesson Plan Generator (no AI)
+`;
+    }
+
+    preview.textContent = generatedText;
+    downloadBtn.style.display = 'inline-block';
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    if (!generatedText) return alert('Please generate the lesson plan first.');
+
+    const blob = new Blob([generatedText], {type: 'text/plain'});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'lesson-plan.txt';
+    a.click();
+
+    URL.revokeObjectURL(url);
+  });
+</script>
+
+</body>
+</html>
+
+

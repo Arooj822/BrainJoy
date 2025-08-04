@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Quiz Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f2f2f2;
+    }
+    h1 {
+      color: #333;
+    }
+    #question-form, #quiz-interface {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, textarea, button {
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .option {
+      margin: 5px 0;
+    }
+    .correct {
+      background: #c8e6c9;
+    }
+    .incorrect {
+      background: #ffcdd2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Play Educational Games (Teacher Quiz)</h1>
+
+  <div id="question-form">
+    <h2>Create a Question</h2>
+    <input type="text" id="question" placeholder="Enter your question" />
+    <input type="text" id="option1" placeholder="Option 1" />
+    <input type="text" id="option2" placeholder="Option 2" />
+    <input type="text" id="option3" placeholder="Option 3" />
+    <input type="text" id="option4" placeholder="Option 4" />
+    <input type="number" id="correctOption" placeholder="Correct Option Number (1-4)" />
+    <button onclick="addQuestion()">Add Question</button>
+  </div>
+
+  <div id="quiz-interface" style="display: none">
+    <h2 id="quiz-question"></h2>
+    <div id="quiz-options"></div>
+    <button onclick="nextQuestion()">Next Question</button>
+  </div>
+
+  <button onclick="startQuiz()">Start Quiz</button>
+
+  <script>
+    const questions = [];
+    let currentIndex = 0;
+
+    function addQuestion() {
+      const q = document.getElementById("question").value;
+      const options = [
+        document.getElementById("option1").value,
+        document.getElementById("option2").value,
+        document.getElementById("option3").value,
+        document.getElementById("option4").value
+      ];
+      const correct = parseInt(document.getElementById("correctOption").value) - 1;
+
+      if (q && options.every(opt => opt !== '') && correct >= 0 && correct < 4) {
+        questions.push({ question: q, options: options, correct: correct });
+        alert("Question added!");
+        document.querySelectorAll("input").forEach(input => input.value = "");
+      } else {
+        alert("Please fill all fields correctly.");
+      }
+    }
+
+    function startQuiz() {
+      if (questions.length === 0) {
+        alert("Add at least one question first.");
+        return;
+      }
+      currentIndex = 0;
+      document.getElementById("question-form").style.display = "none";
+      document.getElementById("quiz-interface").style.display = "block";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = questions[currentIndex];
+      document.getElementById("quiz-question").textContent = q.question;
+      const optionsDiv = document.getElementById("quiz-options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.classList.add("option");
+        btn.onclick = () => {
+          if (idx === q.correct) {
+            btn.classList.add("correct");
+          } else {
+            btn.classList.add("incorrect");
+          }
+        };
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      if (currentIndex < questions.length) {
+        showQuestion();
+      } else {
+        document.getElementById("quiz-interface").innerHTML = "<h2>Quiz Finished!</h2>";
+      }
+    }
+  </script>
+</body>
+</html>
+
+

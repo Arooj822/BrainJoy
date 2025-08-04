@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Design Your Teaching Workspace</title>
+<style>
+  body {
+    margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .sidebar {
+    width: 250px;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .sidebar h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  .widget-btn {
+    display: block;
+    background: #34495e;
+    margin-bottom: 12px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .widget-btn:hover {
+    background: #1abc9c;
+  }
+
+  .workspace {
+    flex-grow: 1;
+    padding: 20px;
+    background: #ecf0f1;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-content: flex-start;
+  }
+
+  .widget {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    width: 280px;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+  }
+  .widget-header {
+    background: #2980b9;
+    color: white;
+    padding: 10px 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab;
+  }
+  .widget-header button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .widget-content {
+    flex-grow: 1;
+    padding: 10px 15px;
+    overflow-y: auto;
+  }
+
+  /* Specific widget styles */
+  textarea.notes-area {
+    width: 100%;
+    height: 100%;
+    border: none;
+    resize: none;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #fefefe;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .timer-display {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 10px;
+    user-select: none;
+  }
+  .timer-controls button {
+    background: #27ae60;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    margin-right: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    user-select: none;
+  }
+  .timer-controls button:hover {
+    background: #1e8449;
+  }
+
+  .calc-display {
+    width: 100%;
+    height: 40px;
+    font-size: 1.4rem;
+    text-align: right;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    border: 2px solid #2980b9;
+    border-radius: 6px;
+  }
+  .calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .calc-buttons button {
+    padding: 12px 0;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    border: none;
+    background: #3498db;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+  }
+  .calc-buttons button:hover {
+    background: #217dbb;
+  }
+
+  .todo-list {
+    list-style: none;
+    padding-left: 0;
+    max-height: 120px;
+    overflow-y: auto;
+  }
+  .todo-list li {
+    background: #dff9fb;
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .todo-list button {
+    background: transparent;
+    border: none;
+    color: #e74c3c;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+  }
+  .todo-input {
+    width: 100%;
+    padding: 6px 10px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    border: 2px solid #2980b9;
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+
+  .quick-links a {
+    display: block;
+    padding: 6px 0;
+    color: #2980b9;
+    text-decoration: none;
+    border-bottom: 1px solid #ccc;
+  }
+  .quick-links a:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar" role="complementary" aria-label="Available widgets">
+  <h2>Available Widgets</h2>
+  <button class="widget-btn" data-widget="notes">📝 Notes</button>
+  <button class="widget-btn" data-widget="timer">⏲ Timer</button>
+  <button class="widget-btn" data-widget="calculator">🧮 Calculator</button>
+  <button class="widget-btn" data-widget="todo">✅ To-Do List</button>
+  <button class="widget-btn" data-widget="quicklinks">🔗 Quick Links</button>
+</div>
+
+<div class="workspace" id="workspace" aria-label="Teacher's digital workspace" tabindex="0">
+  <!-- Widgets get added here -->
+</div>
+
+<script>
+  const workspace = document.getElementById('workspace');
+  const widgetButtons = document.querySelectorAll('.widget-btn');
+
+  // Utility to create elements with classes & props
+  function createElem(tag, options = {}) {
+    const el = document.createElement(tag);
+    if(options.classes) el.className = options.classes;
+    if(options.text) el.textContent = options.text;
+    if(options.html) el.innerHTML = options.html;
+    if(options.attrs) {
+      for(const attr in options.attrs) {
+        el.setAttribute(attr, options.attrs[attr]);
+      }
+    }
+    return el;
+  }
+
+  // Create widget HTML by type
+  function createWidget(type, savedData = null) {
+    const widget = createElem('div', {classes: 'widget', attrs: {'draggable': 'true'}});
+    widget.dataset.type = type;
+
+    // Header with title & remove button
+    const header = createElem('div', {classes: 'widget-header'});
+    const titleMap = {
+      notes: '📝 Notes',
+      timer: '⏲ Timer',
+      calculator: '🧮 Calculator',
+      todo: '✅ To-Do List',
+      quicklinks: '🔗 Quick Links'
+    };
+    header.textContent = titleMap[type] || 'Widget';
+    const removeBtn = createElem('button', {html: '&times;', attrs: {'aria-label': 'Remove widget'}});
+    removeBtn.addEventListener('click', () => {
+      widget.remove();
+      saveWorkspace();
+    });
+    header.appendChild(removeBtn);
+    widget.appendChild(header);
+
+    // Content area
+    const content = createElem('div', {classes: 'widget-content'});
+    widget.appendChild(content);
+
+    // Fill widget content by type
+    switch(type) {
+      case 'notes':
+        const textarea = createElem('textarea', {classes: 'notes-area', attrs: {'aria-label': 'Notes area'}});
+        if(savedData) textarea.value = savedData;
+        textarea.addEventListener('input', saveWorkspace);
+        content.appendChild(textarea);
+        break;
+
+      case 'timer':
+        const display = createElem('div', {classes: 'timer-display', text: '00:00:00'});
+        const controls = createElem('div', {classes: 'timer-controls'});
+        const startBtn = createElem('button', {text: 'Start'});
+        const pauseBtn = createElem('button', {text: 'Pause'});
+        const resetBtn = createElem('button', {text: 'Reset'});
+
+        let timerInterval = null;
+        let seconds = 0;
+
+        function updateTimerDisplay() {
+          const h = Math.floor(seconds / 3600).toString().padStart(2,'0');
+          const m = Math.floor((seconds % 3600) / 60).toString().padStart(2,'0');
+          const s = (seconds % 60).toString().padStart(2,'0');
+          display.textContent = `${h}:${m}:${s}`;
+          saveWorkspace();
+        }
+        if(savedData && savedData.seconds) seconds = savedData.seconds;
+        updateTimerDisplay();
+
+        startBtn.addEventListener('click', () => {
+          if(timerInterval) return;
+          timerInterval = setInterval(() => {
+            seconds++;
+            updateTimerDisplay();
+          }, 1000);
+        });
+        pauseBtn.addEventListener('click', () => {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          saveWorkspace();
+        });
+        resetBtn.addEventListener('click', () => {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          seconds = 0;
+          updateTimerDisplay();
+          saveWorkspace();
+        });
+        controls.append(startBtn, pauseBtn, resetBtn);
+        content.append(display, controls);
+        break;
+
+      case 'calculator':
+        const calcDisplay = createElem('input', {classes: 'calc-display', attrs: {readonly: 'true', 'aria-label': 'Calculator display', type: 'text', value: savedData?.display || ''}});
+        const buttons = createElem('div', {classes: 'calc-buttons'});
+
+        const calcBtns = ['7','8','9','/','4','5','6','*','1','2','3','-','0','.','=','+','C'];
+        calcBtns.forEach(ch => {
+          const btn = createElem('button', {text: ch});
+          btn.addEventListener('click', () => {
+            if(ch === 'C') {
+              calcDisplay.value = '';
+            } else if(ch === '=') {
+              try {
+                // Evaluate safely:
+                const result = Function('"use strict";return (' + calcDisplay.value + ')')();
+                calcDisplay.value = result;
+              } catch {
+                calcDisplay.value = 'Error';
+              }
+            } else {
+              calcDisplay.value += ch;
+            }
+            saveWorkspace();
+          });
+          buttons.appendChild(btn);
+        });
+
+        content.append(calcDisplay, buttons);
+        break;
+
+      case 'todo':
+        const todoInput = createElem('input', {classes: 'todo-input', attrs: {type:'text', placeholder:'Add a task', 'aria-label':'Add a new task'}});
+        const todoList = createElem('ul', {classes: 'todo-list', attrs: {'aria-label': 'To-do list'}});
+
+        // Load saved tasks if any
+        if(savedData && Array.isArray(savedData.tasks)) {
+          savedData.tasks.forEach(task => {
+            addTask(task);
+          });
+        }
+
+        function addTask(taskText) {
+          const li = createElem('li');
+          li.textContent = taskText;
+          const removeTaskBtn = createElem('button', {text: '✕', attrs: {'aria-label': 'Remove task'}});
+          removeTaskBtn.addEventListener('click', () => {
+            li.remove();
+            saveWorkspace();
+          });
+          li.appendChild(removeTaskBtn);
+          todoList.appendChild(li);
+        }
+
+        todoInput.addEventListener('keypress', e => {
+          if(e.key === 'Enter') {
+            const val = todoInput.value.trim();
+            if(val) {
+              addTask(val);
+              todoInput.value = '';
+              saveWorkspace();
+            }
+          }
+        });
+
+        content.append(todoInput, todoList);
+        break;
+
+      case 'quicklinks':
+        const links = [
+          {text: 'Google', url: 'https://www.google.com'},
+          {text: 'Khan Academy', url: 'https://www.khanacademy.org'},
+          {text: 'YouTube EDU', url: 'https://www.youtube.com/education'},
+          {text: 'Quizlet', url: 'https://quizlet.com'},
+          {text: 'Nearpod', url: 'https://nearpod.com'}
+        ];
+        const linksDiv = createElem('div', {classes: 'quick-links'});
+        links.forEach(link => {
+          const a = createElem('a', {text: link.text, attrs: {href: link.url, target: '_blank', rel: 'noopener'}});
+          linksDiv.appendChild(a);
+        });
+        content.appendChild(linksDiv);
+        break;
+    }
+
+    return widget;
+  }
+
+  // Save workspace to localStorage
+  function saveWorkspace() {
+    const widgets = [...workspace.children];
+    const state = widgets.map(w => {
+      const type = w.dataset.type;
+      let data = null;
+      switch(type) {
+        case 'notes':
+          data = w.querySelector('textarea').value;
+          break;
+        case 'timer':
+          const timerDisplay = w.querySelector('.timer-display').textContent.split(':');
+          data = {seconds: parseInt(timerDisplay[0]) * 3600 + parseInt(timerDisplay[1]) * 60 + parseInt(timerDisplay[2])};
+          break;
+        case 'calculator':
+          data = {display: w.querySelector('.calc-display').value};
+          break;
+        case 'todo':
+          const tasks = [...w.querySelectorAll('.todo-list li')].map(li => li.firstChild.textContent);
+          data = {tasks};
+          break;
+        case 'quicklinks':
+          data = null;
+          break;
+      }
+      return {type, data};
+    });
+    localStorage.setItem('teacherWorkspace', JSON.stringify(state));
+  }
+
+  // Load workspace from localStorage
+  function loadWorkspace() {
+    workspace.innerHTML = '';
+    const saved = localStorage.getItem('teacherWorkspace');
+    if(saved) {
+      const widgets = JSON.parse(saved);
+      widgets.forEach(w => {
+        const widget = createWidget(w.type, w.data);
+        workspace.appendChild(widget);
+      });
+    }
+  }
+
+  // Drag & drop rearranging of widgets
+  let dragSrcEl = null;
+  workspace.addEventListener('dragstart', e => {
+    if(!e.target.classList.contains('widget')) return;
+    dragSrcEl = e.target;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target.outerHTML);
+    e.target.classList.add('dragging');
+  });
+  workspace.addEventListener('dragover', e => {
+    e.preventDefault();
+    if(!e.target.classList.contains('widget')) return;
+    e.target.style.border = '2px dashed #1abc9c';
+  });
+  workspace.addEventListener('dragleave', e => {
+    if(!e.target.classList.contains('widget')) return;
+    e.target.style.border = '';
+  });
+  workspace.addEventListener('drop', e => {
+    e.preventDefault();
+    if(!e.target.classList.contains('widget')) return;
+    e.target.style.border = '';
+    if(dragSrcEl === e.target) return;
+    // Rearrange widgets
+    const draggedHTML = e.dataTransfer.getData('text/html');
+    e.target.insertAdjacentHTML('beforebegin', draggedHTML);
+    dragSrcEl.remove();
+    // Reattach events on newly inserted widget
+    attachWidgetEvents();
+    saveWorkspace();
+  });
+  workspace.addEventListener('dragend', e => {
+    if(e.target.classList.contains('widget')) {
+      e.target.classList.remove('dragging');
+    }
+  });
+
+  // Add new widget buttons
+  widgetButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.dataset.widget;
+      // Prevent duplicates for certain widgets if needed (optional)
+      if(type === 'timer' && [...workspace.children].some(w => w.dataset.type === 'timer')) {
+        alert('Only one Timer allowed.');
+        return;
+      }
+      const widget = createWidget(type);
+      workspace.appendChild(widget);
+      attachWidgetEvents();
+      saveWorkspace();
+    });
+  });
+
+  // Attach remove and drag events to existing widgets
+  function attachWidgetEvents() {
+    [...workspace.querySelectorAll('.widget')].forEach(widget => {
+      // Remove event already attached on creation
+      // Add draggable attr just in case
+      widget.setAttribute('draggable', 'true');
+    });
+  }
+
+  // Load workspace on page load
+  loadWorkspace();
+
+  // Save workspace when window unloads (optional)
+  window.addEventListener('beforeunload', saveWorkspace);
+
+</script>
+
+</body>
+</html>

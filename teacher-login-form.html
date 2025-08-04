@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Teacher Login - BrainJoy</title>
+<style>
+  /* ...existing CSS... */
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #e9f0fb;
+    padding: 20px;
+    margin: 0;
+    color: #333;
+  }
+  h2 { text-align: center; color: #2c3e50; margin-bottom: 1rem; }
+  form {
+    background: white;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(44, 62, 80, 0.15);
+  }
+  .section-header {
+    font-size: 1.2rem;
+    color: #2980b9;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #2980b9;
+    padding-bottom: 4px;
+    font-weight: 600;
+  }
+  label { display: block; margin-bottom: 6px; font-weight: 600; color: #34495e; }
+  input[type="text"], input[type="email"], input[type="password"], select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #d1d9e6;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    margin-bottom: 15px;
+    color: #2c3e50;
+  }
+  input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
+    outline: none;
+    border-color: #2980b9;
+    background: #f0f7ff;
+  }
+  select[multiple] { height: 120px; }
+  .password-toggle {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: #34495e;
+    margin-bottom: 15px;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+  }
+  .password-toggle input { margin-right: 8px; cursor: pointer; }
+  .checkbox-group {
+    border: 1px solid #d1d9e6;
+    border-radius: 8px;
+    padding: 15px;
+    max-height: 220px;
+    overflow-y: auto;
+    background: #f9fbff;
+    margin-bottom: 20px;
+  }
+  .checkbox-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2c3e50;
+    cursor: pointer;
+  }
+  .info-message {
+    background-color: #dff0d8;
+    border-left: 6px solid #3c763d;
+    color: #3c763d;
+    font-weight: 600;
+    padding: 15px 20px;
+    margin: 20px 0 25px 0;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  button[type="submit"] {
+    background-color: #2980b9;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    width: 100%;
+  }
+  button[type="submit"]:hover { background-color: #1c5d8f; }
+  .checkbox-group::-webkit-scrollbar { width: 7px; }
+  .checkbox-group::-webkit-scrollbar-thumb { background-color: #2980b9; border-radius: 10px; }
+  @media (max-width: 500px) {
+    form { padding: 20px 15px; }
+  }
+</style>
+</head>
+<body>
+
+<h2>Teacher Login / Profile Setup</h2>
+
+<form id="teacherLoginForm" autocomplete="off">
+
+  <div class="section-header">Personal Information</div>
+
+  <label for="fullName">Full Name</label>
+  <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required />
+
+  <label for="email">Email Address</label>
+  <input type="email" id="email" name="email" placeholder="Enter your email" required />
+
+  <label for="password">Password</label>
+  <input type="password" id="password" name="password" placeholder="Enter a password" required />
+  <label class="password-toggle">
+    <input type="checkbox" id="togglePassword" /> Show Password
+  </label>
+
+   <label for="nationality">Nationality</label>
+  <input type="text" id="nationality" name="nationality" placeholder="Enter your nationality" required />
+
+  <div class="section-header">Teaching Information</div>
+
+  <label for="gradesTeaching">Grade(s) Teaching</label>
+  <select id="gradesTeaching" name="gradesTeaching" multiple required>
+    <option value="EYFS">EYFS</option>
+    <option value="Grade 1">Grade 1</option>
+    <option value="Grade 2">Grade 2</option>
+    <option value="Grade 3">Grade 3</option>
+    <option value="Grade 4">Grade 4</option>
+    <option value="Grade 5">Grade 5</option>
+    <option value="Grade 6">Grade 6</option>
+    <option value="Grade 7">Grade 7</option>
+    <option value="Grade 8">Grade 8</option>
+    <option value="Grade 9">Grade 9</option>
+    <option value="Grade 10">Grade 10</option>
+    <option value="Grade 11">Grade 11</option>
+    <option value="Grade 12">Grade 12</option>
+  </select>
+
+  <label for="subjectsTeaching">Subject(s) Teaching</label>
+  <input type="text" id="subjectsTeaching" name="subjectsTeaching" placeholder="Enter your subjects (comma separated)" required />
+
+  <label for="curriculum">Curriculum</label>
+  <input type="text" id="curriculum" name="curriculum" placeholder="Enter your curriculum(s)" required />
+
+  <div class="section-header">Purpose of Using Platform</div>
+  <div class="checkbox-group" aria-label="Select purpose(s) of using the platform">
+    <label><input type="checkbox" name="purpose" value="Sell educational resources" /> Sell educational resources</label>
+    <label><input type="checkbox" name="purpose" value="Explore/download free/paid resources" /> Explore/download free/paid resources</label>
+    <label><input type="checkbox" name="purpose" value="Create virtual classroom" /> Create virtual classroom</label>
+    <label><input type="checkbox" name="purpose" value="Design workspace" /> Design workspace</label>
+    <label><input type="checkbox" name="purpose" value="Generate AI lesson plans" /> Generate AI lesson plans</label>
+    <label><input type="checkbox" name="purpose" value="Generate PowerPoints" /> Generate PowerPoints</label>
+    <label><input type="checkbox" name="purpose" value="Play educational games" /> Play educational games</label>
+    <label><input type="checkbox" name="purpose" value="Create & assign quizzes" /> Create & assign quizzes</label>
+    <label><input type="checkbox" name="purpose" value="Track student progress" /> Track student progress</label>
+    <label><input type="checkbox" name="purpose" value="Collaborate with other teachers" /> Collaborate with other teachers</label>
+    <label><input type="checkbox" name="purpose" value="Access training/certifications" /> Access training/certifications</label>
+    <label><input type="checkbox" name="purpose" value="Request classroom management tools" /> Request classroom management tools</label>
+    <label><input type="checkbox" name="purpose" value="Parent-teacher communication" /> Parent-teacher communication</label>
+    <label><input type="checkbox" name="purpose" value="Upload video lessons" /> Upload video lessons</label>
+    <label><input type="checkbox" name="purpose" value="Conduct live sessions" /> Conduct live sessions</label>
+    <label><input type="checkbox" name="purpose" value="AI Voiceover Generator for PowerPoints" /> AI Voiceover Generator for PowerPoints (for young learners)</label>
+    <label><input type="checkbox" name="purpose" value="Auto-Translate Resources" /> Auto-Translate Resources (for EAL students)</label>
+    <label><input type="checkbox" name="purpose" value="Smart Weekly Planner" /> Smart Weekly Planner that auto-fills based on subject, grade & curriculum</label>
+    <label><input type="checkbox" name="purpose" value="Real-time Whiteboard integration" /> Real-time Whiteboard integration (for online collaboration)</label>
+    <label><input type="checkbox" name="purpose" value="Behaviour Tracker Tool" /> Behaviour Tracker Tool (customizable tags, graphs)</label>
+    <label><input type="checkbox" name="purpose" value="Direct Marketplace selling" /> Direct Marketplace selling (earn royalties from sales)</label>
+    <label><input type="checkbox" name="purpose" value="Direct Marketplace buying" /> Direct Marketplace buying (save & resell for your school or other teachers)</label>
+    <label><input type="checkbox" name="purpose" value="AI Resource Feedback" /> Get AI-powered feedback on my uploaded resources</label>
+<label><input type="checkbox" name="purpose" value="Co-Teaching & Collaboration" /> Co-create resources and lessons with other teachers in real time</label>
+<label><input type="checkbox" name="purpose" value="Instant Payouts" /> Receive instant payouts for my resource sales</label>
+<label><input type="checkbox" name="purpose" value="Gamified Badges & Contests" /> Earn badges and participate in monthly teaching contests</label>
+<label><input type="checkbox" name="purpose" value="Accessibility Tools" /> Use accessibility tools (dyslexia font, text-to-speech, etc.)</label>
+<label><input type="checkbox" name="purpose" value="Parent Progress Reports" /> Auto-generate and send progress reports to parents</label>
+<label><input type="checkbox" name="purpose" value="School Admin Dashboard" /> Manage resources and teachers for my whole school</label>
+<label><input type="checkbox" name="purpose" value="AI Resource Recommendations" /> Get personalized AI recommendations for resources</label>
+<label><input type="checkbox" name="purpose" value="Interactive Resource Builder" /> Build interactive worksheets, quizzes, and games (not just PDFs)</label>
+<label><input type="checkbox" name="purpose" value="Live Q&A and Community" /> Join live Q&A sessions and teacher community forums</label>
+  </div>
+
+  <div class="info-message">
+    <strong>Note:</strong> If you sell anything on BrainJoy, 20% of your sales will be sent to BrainJoy, and you will receive 80%.
+  </div>
+
+  <button type="submit">Submit & Login</button>
+</form>
+
+<script>
+  // Toggle Password Visibility
+  const togglePasswordCheckbox = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+  togglePasswordCheckbox.addEventListener('change', () => {
+    passwordInput.type = togglePasswordCheckbox.checked ? 'text' : 'password';
+  });
+
+ document.getElementById('teacherLoginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+   // Gather form data
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const nationality = document.getElementById('nationality').value.trim();
+    const gradesTeachingSelect = document.getElementById('gradesTeaching');
+    const subjectsTeaching = document.getElementById('subjectsTeaching').value.trim();
+    const curriculum = document.getElementById('curriculum').value.trim();
+    const purposeCheckboxes = document.querySelectorAll('input[name="purpose"]:checked');
+
+    
+    if (!fullName || !email || !password || !nationality) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    // Directly redirect to dashboard
+    window.location.href = 'teacher_dashboard.html';
+  });
+</script>
+
+</body>
+</html>
+
+

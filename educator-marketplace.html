@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sell Teaching Resources | BrainJoy</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f2f2f2;
+    }
+    h2, h3 {
+      color: #333;
+    }
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    input[type="file"] {
+      margin-top: 10px;
+    }
+    input[type="submit"] {
+      margin-top: 20px;
+      padding: 10px 15px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .resource-list {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .resource-item {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .resource-item:last-child {
+      border-bottom: none;
+    }
+    .note {
+      font-size: 0.9em;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Sell Your Teaching Resources on BrainJoy</h2>
+
+  <form id="uploadForm">
+    <label>Resource Title:</label>
+    <input type="text" name="title" required>
+
+    <label>Grade (Type Manually):</label>
+    <input type="text" name="grade" placeholder="e.g., Grade 5" required>
+
+    <label>Subject (Type Manually):</label>
+    <input type="text" name="subject" placeholder="e.g., Math, Science" required>
+
+    <label>Description:</label>
+    <textarea name="description" rows="3" required></textarea>
+
+    <label>Upload File:</label>
+    <input type="file" name="file" accept=".pdf,.docx,.pptx" required>
+
+    <label>Price (USD):</label>
+    <input type="number" name="price" step="0.01" placeholder="0 for free" required>
+
+    <div class="note">Note: 20% of the sale goes to BrainJoy for platform support.</div>
+
+    <input type="submit" value="Upload Resource">
+  </form>
+
+  <div class="resource-list">
+    <h3>Explore Uploaded Resources</h3>
+    <div id="resourceOutput"></div>
+  </div>
+
+  <script>
+    const uploadForm = document.getElementById('uploadForm');
+    const resourceOutput = document.getElementById('resourceOutput');
+
+    uploadForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(uploadForm);
+      const title = formData.get('title');
+      const grade = formData.get('grade');
+      const subject = formData.get('subject');
+      const description = formData.get('description');
+      const price = parseFloat(formData.get('price')).toFixed(2);
+
+      const resourceHTML = `
+        <div class="resource-item">
+          <strong>Title:</strong> ${title}<br>
+          <strong>Grade:</strong> ${grade}<br>
+          <strong>Subject:</strong> ${subject}<br>
+          <strong>Description:</strong> ${description}<br>
+          <strong>Price:</strong> ${price == 0 ? "Free" : "$" + price}<br>
+          <strong>Note:</strong> 20% will go to BrainJoy.<br>
+          <em>Download available upon approval.</em>
+        </div>
+      `;
+
+      resourceOutput.innerHTML += resourceHTML;
+      uploadForm.reset();
+    });
+  </script>
+
+</body>
+</html>

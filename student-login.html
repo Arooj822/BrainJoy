@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Student Platform</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #eef2f7;
+    margin: 0;
+    padding: 20px;
+  }
+  h1, h2 {
+    color: #333;
+  }
+  /* Common styles */
+  input, select, button {
+    font-size: 1rem;
+    padding: 8px 12px;
+    margin-top: 6px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  label {
+    font-weight: bold;
+    display: block;
+    margin-top: 12px;
+  }
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+  /* Badge styles */
+  #badgeContainer .badge {
+    display: inline-block;
+    background: #ffd700;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 12px;
+    font-weight: bold;
+    color: #555;
+  }
+  /* Sections */
+  section {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 600px;
+  }
+  /* Hidden */
+  .hidden {
+    display: none;
+  }
+  /* Container for centering */
+  .container {
+    max-width: 700px;
+    margin: auto;
+  }
+  /* Header */
+  #welcomeMsg {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    color: #2a7f62;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LOGIN FORM -->
+  <section id="loginSection">
+    <h1>Student Login</h1>
+    <form id="loginForm" novalidate>
+      <label for="fullName">Full Name *</label>
+      <input type="text" id="fullName" name="fullName" required minlength="3" placeholder="Your full name" />
+
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" required placeholder="you@example.com" />
+
+      <label for="password">Password *</label>
+      <input type="password" id="password" name="password" required minlength="6" placeholder="Minimum 6 characters" />
+
+      <label for="gradeLevel">Grade Level *</label>
+      <select id="gradeLevel" name="gradeLevel" required>
+        <option value="">-- Select Grade Level --</option>
+        <option value="Grade 9">Grade 9</option>
+        <option value="Grade 10">Grade 10</option>
+        <option value="Grade 11">Grade 11</option>
+        <option value="Grade 12">Grade 12</option>
+      </select>
+
+      <label for="schoolName">School Name (Optional)</label>
+      <input type="text" id="schoolName" name="schoolName" placeholder="Your school name" />
+
+      <label for="teacherCode">Teacher Code (Optional)</label>
+      <input type="text" id="teacherCode" name="teacherCode" placeholder="Teacher code" />
+
+      <label for="subjects">Subjects of Interest *</label>
+      <select id="subjects" name="subjects" multiple size="5" required>
+        <option value="Math">Math</option>
+        <option value="Science">Science</option>
+        <option value="English">English</option>
+        <option value="History">History</option>
+        <option value="Art">Art</option>
+      </select>
+
+      <button type="submit" style="margin-top: 20px;">Login</button>
+    </form>
+  </section>
+
+  <!-- STUDENT DASHBOARD -->
+  <section id="dashboardSection" class="hidden">
+    <h1>Student Dashboard</h1>
+    <div id="welcomeMsg"></div>
+
+    <section id="badges">
+      <h2>Your Badges</h2>
+      <div id="badgeContainer"></div>
+    </section>
+
+    <section id="storySection">
+      <h2>Choose a Story to Read (Your Reading Level: <span id="readingLevel">Beginner</span>)</h2>
+      <label for="storySelect">Select Story:</label>
+      <select id="storySelect"></select>
+      <button id="startReadingBtn" style="margin-top:10px;">Start Reading</button>
+    </section>
+
+    <section id="assessmentSection" class="hidden">
+      <h2>Reading Assessment</h2>
+      <p>Answer the question to check your comprehension:</p>
+      <div id="questionArea"></div>
+      <button id="submitAnswerBtn" disabled>Submit Answer</button>
+    </section>
+
+    <div id="levelDisplay" style="margin-top: 15px; font-weight: bold;"></div>
+  </section>
+
+</div>
+
+<script>
+  // Student data stored in memory for demo
+  let student = {
+    fullName: '',
+    badges: ['Welcome Badge'],
+    readingLevel: 'Beginner', // Beginner, Intermediate, Advanced
+  };
+
+  // Stories by reading level
+  const stories = {
+    Beginner: [
+      { id: 1, title: "The Little Red Hen", question: "What was the hen doing?", answer: "baking bread" },
+      { id: 2, title: "The Tortoise and the Hare", question: "Who won the race?", answer: "the tortoise" }
+    ],
+    Intermediate: [
+      { id: 3, title: "The Boy Who Cried Wolf", question: "Why did people stop believing the boy?", answer: "he lied" },
+      { id: 4, title: "The Lion and the Mouse", question: "How did the mouse help the lion?", answer: "freed him" }
+    ],
+    Advanced: [
+      { id: 5, title: "Romeo and Juliet - Summary", question: "What is the main theme of the story?", answer: "love and tragedy" },
+      { id: 6, title: "To Kill a Mockingbird - Summary", question: "What does Atticus Finch represent?", answer: "justice" }
+    ]
+  };
+
+  // Elements
+  const loginSection = document.getElementById('loginSection');
+  const dashboardSection = document.getElementById('dashboardSection');
+  const welcomeMsg = document.getElementById('welcomeMsg');
+
+  const badgeContainer = document.getElementById('badgeContainer');
+  const readingLevelSpan = document.getElementById('readingLevel');
+  const storySelect = document.getElementById('storySelect');
+  const startReadingBtn = document.getElementById('startReadingBtn');
+  const assessmentSection = document.getElementById('assessmentSection');
+  const questionArea = document.getElementById('questionArea');
+  const submitAnswerBtn = document.getElementById('submitAnswerBtn');
+  const levelDisplay = document.getElementById('levelDisplay');
+
+  let currentStory = null;
+
+  // Display badges
+  function displayBadges() {
+    badgeContainer.innerHTML = '';
+    student.badges.forEach(badge => {
+      const div = document.createElement('div');
+      div.className = 'badge';
+      div.textContent = badge;
+      badgeContainer.appendChild(div);
+    });
+  }
+
+  // Load stories into dropdown based on reading level
+  function loadStories(level) {
+    storySelect.innerHTML = '';
+    stories[level].forEach(story => {
+      const option = document.createElement('option');
+      option.value = story.id;
+      option.textContent = story.title;
+      storySelect.appendChild(option);
+    });
+  }
+
+  // Update reading level display
+  function updateReadingLevelDisplay() {
+    readingLevelSpan.textContent = student.readingLevel;
+  }
+
+  // Handle login form submission
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Simple validation (HTML5 does most)
+    if (!this.checkValidity()) {
+      alert('Please fill out all required fields correctly.');
+      return;
+    }
+
+    // Save full name for greeting
+    student.fullName = this.fullName.value.trim();
+
+    // Hide login, show dashboard
+    loginSection.classList.add('hidden');
+    dashboardSection.classList.remove('hidden');
+
+    welcomeMsg.textContent = `Welcome, ${student.fullName}!`;
+
+    // Initialize dashboard data
+    displayBadges();
+    loadStories(student.readingLevel);
+    updateReadingLevelDisplay();
+
+    // Reset any assessment UI
+    assessmentSection.classList.add('hidden');
+    submitAnswerBtn.disabled = true;
+    startReadingBtn.disabled = false;
+    storySelect.disabled = false;
+    levelDisplay.textContent = '';
+  });
+
+  // Start reading button click
+  startReadingBtn.addEventListener('click', () => {
+    const selectedId = parseInt(storySelect.value);
+    if (!selectedId) {
+      alert('Please select a story.');
+      return;
+    }
+    currentStory = stories[student.readingLevel].find(story => story.id === selectedId);
+    if (!currentStory) return;
+
+    // Show assessment section
+    assessmentSection.classList.remove('hidden');
+    startReadingBtn.disabled = true;
+    storySelect.disabled = true;
+
+    questionArea.innerHTML = `
+      <p><strong>Question:</strong> ${currentStory.question}</p>
+      <input type="text" id="answerInput" placeholder="Type your answer here" style="width:100%; padding:6px;" />
+    `;
+
+    submitAnswerBtn.disabled = true;
+
+    // Enable submit when input not empty
+    const answerInput = document.getElementById('answerInput');
+    answerInput.addEventListener('input', () => {
+      submitAnswerBtn.disabled = answerInput.value.trim().length === 0;
+    });
+
+    levelDisplay.textContent = '';
+  });
+
+  // Submit answer button click
+  submitAnswerBtn.addEventListener('click', () => {
+    const answerInput = document.getElementById('answerInput');
+    const studentAnswer = answerInput.value.trim().toLowerCase();
+    const correctAnswer = currentStory.answer.toLowerCase();
+
+    if (studentAnswer === correctAnswer) {
+      levelDisplay.textContent = 'Correct! Your reading level has been updated.';
+      levelDisplay.style.color = 'green';
+
+      // Promote reading level and add badges
+      if (student.readingLevel === 'Beginner') {
+        student.readingLevel = 'Intermediate';
+        if (!student.badges.includes('Intermediate Reader')) {
+          student.badges.push('Intermediate Reader');
+        }
+      } else if (student.readingLevel === 'Intermediate') {
+        student.readingLevel = 'Advanced';
+        if (!student.badges.includes('Advanced Reader')) {
+          student.badges.push('Advanced Reader');
+        }
+      } else {
+        levelDisplay.textContent = 'You have reached the highest level! Great job!';
+      }
+
+      // Update UI
+      displayBadges();
+      updateReadingLevelDisplay();
+      loadStories(student.readingLevel);
+
+      // Reset UI to allow reading another story
+      assessmentSection.classList.add('hidden');
+      startReadingBtn.disabled = false;
+      storySelect.disabled = false;
+      submitAnswerBtn.disabled = true;
+      questionArea.innerHTML = '';
+      storySelect.value = '';
+    } else {
+      levelDisplay.textContent = 'Incorrect. Please try again or read another story.';
+      levelDisplay.style.color = 'red';
+    }
+  });
+</script>
+
+</body>
+</html>
+

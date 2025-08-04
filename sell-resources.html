@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sell & Browse Teaching Resources - BrainJoy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8fafc;
+      color: #333;
+    }
+    header {
+      background-color: #10b981;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      background-color: #d1fae5;
+    }
+    .tabs button {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      padding: 1rem 2rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: #065f46;
+    }
+    .tabs button.active {
+      border-bottom: 4px solid #065f46;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    input[type="file"] {
+      padding: 0.4rem;
+    }
+    button.submit {
+      margin-top: 2rem;
+      background-color: #10b981;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button.submit:hover {
+      background-color: #0e9e6e;
+    }
+    .note {
+      background: #ecfdf5;
+      padding: 1rem;
+      border-left: 6px solid #10b981;
+      margin-top: 2rem;
+      border-radius: 8px;
+    }
+    .resource {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: #f9fafb;
+    }
+    .resource h3 {
+      margin-top: 0;
+      color: #047857;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🛍️ Sell & Browse Teaching Resources</h1>
+    <p>Upload your best materials and earn! 20% goes to BrainJoy to support teachers.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('submit')">📤 Submit Your Resource</button>
+    <button class="tab-btn" onclick="showTab('browse')">🔍 Browse Resources</button>
+  </div>
+
+  <div id="submit" class="container tab-content">
+    <h2>Submit Your Resource</h2>
+    <form action="#" method="post" enctype="multipart/form-data">
+      <label for="title">Resource Title</label>
+      <input type="text" id="title" name="title" placeholder="e.g., Grade 5 Science Revision Pack" required />
+
+      <label for="subject">Subject</label>
+      <input type="text" id="subject" name="subject" placeholder="e.g., Science" required />
+
+      <label for="grade">Grade Level</label>
+      <input type="text" id="grade" name="grade" placeholder="e.g., Grade 5" required />
+
+      <label for="price">Set Your Price (USD)</label>
+      <input type="number" id="price" name="price" step="0.01" placeholder="e.g., 10.00" required />
+
+      <label for="description">Short Description</label>
+      <textarea id="description" name="description" rows="4" placeholder="Tell other educators about your resource..." required></textarea>
+
+      <label for="file">Upload File (PDF, PPT, DOCX)</label>
+      <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.ppt,.pptx" required />
+
+      <div class="note">
+        💡 <strong>Note:</strong> BrainJoy keeps 20% from each sale to support this free platform. You receive 80% in USD.
+      </div>
+
+      <button class="submit" type="submit">Submit Resource</button>
+    </form>
+  </div>
+
+  <div id="browse" class="container tab-content hidden">
+    <h2>Browse Teaching Resources</h2>
+
+    <div class="resource">
+      <h3>🌍 Grade 6 Geography Quiz Pack</h3>
+      <p><strong>Subject:</strong> Geography</p>
+      <p><strong>Grade:</strong> 6</p>
+      <p><strong>Price:</strong> $5.00</p>
+      <p><strong>Description:</strong> Printable worksheets and quiz set aligned with curriculum outcomes on continents and climates.</p>
+    </div>
+
+    <div class="resource">
+      <h3>🔬 High School Biology Experiments Guide</h3>
+      <p><strong>Subject:</strong> Biology</p>
+      <p><strong>Grade:</strong> 10–12</p>
+      <p><strong>Price:</strong> $7.50</p>
+      <p><strong>Description:</strong> Includes lab sheets, student instructions, and teacher rubrics. Covers photosynthesis, osmosis, and more.</p>
+    </div>
+
+    <!-- Add more resources here as needed -->
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+
+      document.getElementById(tabId).classList.remove('hidden');
+      event.target.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

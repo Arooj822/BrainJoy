@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Interactive Virtual Classroom</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f7f9;
+    padding: 20px;
+    display: flex; justify-content: center;
+  }
+  .classroom-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 850px;
+    max-width: 100%;
+    padding: 20px 30px;
+  }
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 5px;
+  }
+  p {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+  }
+  .features-list {
+    color: #34495e;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+  .features-list li {
+    margin-bottom: 6px;
+  }
+  button {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #219150;
+  }
+
+  /* Layout for interactive sections */
+  .interactive-sections {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+  }
+  .section {
+    background: #ecf0f1;
+    border-radius: 10px;
+    padding: 15px;
+    flex: 1 1 300px;
+    min-width: 300px;
+    box-sizing: border-box;
+  }
+  .section h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #2c3e50;
+  }
+
+  /* Whiteboard */
+  #whiteboard {
+    border: 2px solid #27ae60;
+    border-radius: 8px;
+    cursor: crosshair;
+    width: 100%;
+    height: 200px;
+    background: white;
+  }
+  .whiteboard-controls {
+    margin-top: 8px;
+  }
+  .whiteboard-controls button {
+    margin-right: 8px;
+    background: #2980b9;
+  }
+  .whiteboard-controls button:hover {
+    background: #1c5980;
+  }
+
+  /* Chat */
+  #chat-messages {
+    height: 200px;
+    overflow-y: auto;
+    background: white;
+    border: 2px solid #2980b9;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+  #chat-input {
+    width: calc(100% - 50px);
+    padding: 6px 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+  }
+  #send-chat {
+    padding: 6px 12px;
+    margin-left: 6px;
+    border-radius: 5px;
+    border: none;
+    background-color: #2980b9;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  #send-chat:hover {
+    background-color: #1c5980;
+  }
+
+  /* Drag and Drop */
+  .assignments {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .assignment-list, .timeline {
+    background: white;
+    border: 2px solid #8e44ad;
+    border-radius: 8px;
+    padding: 10px;
+    min-height: 100px;
+  }
+  .assignment-item {
+    padding: 8px;
+    margin-bottom: 6px;
+    background: #9b59b6;
+    color: white;
+    border-radius: 5px;
+    cursor: grab;
+  }
+  .timeline {
+    border-color: #27ae60;
+  }
+  .drop-target {
+    min-height: 40px;
+    border: 2px dashed #27ae60;
+    margin-top: 8px;
+    border-radius: 5px;
+    padding: 6px;
+  }
+  .drop-target.dragover {
+    background-color: #d1f2eb;
+    border-color: #16a085;
+  }
+
+  /* Quiz */
+  .quiz-question {
+    margin-bottom: 12px;
+  }
+  .quiz-question label {
+    display: block;
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+  #quiz-feedback {
+    margin-top: 10px;
+    font-weight: 600;
+  }
+
+  /* Progress Tracker */
+  .progress-tracker {
+    background: white;
+    padding: 10px;
+    border: 2px solid #e67e22;
+    border-radius: 8px;
+  }
+  .student-status {
+    margin-bottom: 8px;
+  }
+  .status-indicator {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  .status-active {
+    background: #2ecc71;
+  }
+  .status-distracted {
+    background: #f1c40f;
+  }
+  .status-idle {
+    background: #e74c3c;
+  }
+</style>
+</head>
+<body>
+<div class="classroom-container">
+  <h2>Create Interactive Virtual Classroom</h2>
+  <p>Launch live lessons with video, chat, whiteboards, homework, quizzes, group work, and real-time analytics — all in one place.</p>
+  <ul class="features-list">
+    <li>🌟 Interactive Whiteboard for live collaboration</li>
+    <li>🎙️ Built-in Live Video & Chat with moderation (chat demo here)</li>
+    <li>📁 Drag-and-Drop Assignments & submissions</li>
+    <li>📊 Auto-Grading with instant feedback</li>
+    <li>🗂️ Resource Locker for anytime access (not included in demo)</li>
+    <li>🧩 Gamified Learning with badges & leaderboards (not included)</li>
+    <li>📈 Real-Time Progress Tracking dashboard (demo)</li>
+    <li>🛠️ Custom Tools Add-Ons for Math, Language, Science (future)</li>
+    <li>🔁 Group Breakout Activities with shared boards (future)</li>
+    <li>📆 AI-Powered Smart Homework Scheduler (future)</li>
+  </ul>
+  <button id="reset-btn">Reset Classroom</button>
+
+  <div class="interactive-sections">
+
+    <!-- Whiteboard -->
+    <section class="section">
+      <h3>🌟 Interactive Whiteboard</h3>
+      <canvas id="whiteboard"></canvas>
+      <div class="whiteboard-controls">
+        <button id="clear-whiteboard">Clear</button>
+        <button id="save-whiteboard">Save as PNG</button>
+      </div>
+    </section>
+
+    <!-- Chat -->
+    <section class="section">
+      <h3>🎙️ Live Chat (Demo)</h3>
+      <div id="chat-messages" aria-live="polite"></div>
+      <div style="margin-top:8px; display:flex;">
+        <input type="text" id="chat-input" placeholder="Type your message..." aria-label="Chat message input" />
+        <button id="send-chat" aria-label="Send chat message">Send</button>
+      </div>
+    </section>
+
+    <!-- Assignments Drag & Drop -->
+    <section class="section">
+      <h3>📁 Assignments Drag & Drop</h3>
+      <div class="assignments">
+        <div>
+          <strong>Available Assignments:</strong>
+          <div id="assignment-list" class="assignment-list" aria-label="Available assignments" tabindex="0">
+            <div class="assignment-item" draggable="true" id="assign1" tabindex="0">Math Worksheet</div>
+            <div class="assignment-item" draggable="true" id="assign2" tabindex="0">Science Project</div>
+            <div class="assignment-item" draggable="true" id="assign3" tabindex="0">English Essay</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;">
+          <strong>Timeline (Drop Assignments Here):</strong>
+          <div id="timeline" class="timeline drop-target" aria-label="Assignment timeline" tabindex="0"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section class="section">
+      <h3>📊 Quiz with Auto-Grading</h3>
+      <form id="quiz-form" aria-label="Sample quiz form">
+        <div class="quiz-question">
+          <p>1. What is H<sub>2</sub>O?</p>
+          <label><input type="radio" name="q1" value="water" required /> Water</label>
+          <label><input type="radio" name="q1" value="oxygen" /> Oxygen</label>
+          <label><input type="radio" name="q1" value="hydrogen" /> Hydrogen</label>
+        </div>
+        <div class="quiz-question">
+          <p>2. Which planet is known as the Red Planet?</p>
+          <label><input type="radio" name="q2" value="mars" required /> Mars</label>
+          <label><input type="radio" name="q2" value="venus" /> Venus</label>
+          <label><input type="radio" name="q2" value="jupiter" /> Jupiter</label>
+        </div>
+        <button type="submit" style="background:#2980b9; margin-top:10px; border-radius:6px; padding:8px 16px; color:#fff; border:none; cursor:pointer;">
+          Submit Quiz
+        </button>
+        <div id="quiz-feedback" role="alert" aria-live="assertive"></div>
+      </form>
+    </section>
+
+    <!-- Progress Tracker -->
+    <section class="section">
+      <h3>📈 Real-Time Progress Tracker</h3>
+      <div class="progress-tracker" aria-live="polite" aria-atomic="true">
+        <div class="student-status"><span class="status-indicator status-active"></span> Student A: Active</div>
+        <div class="student-status"><span class="status-indicator status-distracted"></span> Student B: Distracted</div>
+        <div class="student-status"><span class="status-indicator status-idle"></span> Student C: Idle</div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  // WHITEBOARD FUNCTIONALITY
+  const canvas = document.getElementById('whiteboard');
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  let lastX = 0;
+  let lastY = 0;
+
+  // Resize canvas for high DPI screens
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = 200 * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#27ae60';
+    ctx.lineWidth = 3;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  function startDrawing(e) {
+    drawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  }
+  function draw(e) {
+    if(!drawing) return;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  }
+  function stopDrawing() {
+    drawing = false;
+  }
+  canvas.addEventListener('mousedown', startDrawing);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stopDrawing);
+  canvas.addEventListener('mouseout', stopDrawing);
+
+  // Clear whiteboard
+  document.getElementById('clear-whiteboard').addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  });
+
+  // Save whiteboard as PNG
+  document.getElementById('save-whiteboard').addEventListener('click', () => {
+    const dataURL = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.download = 'whiteboard.png';
+    link.href = dataURL;
+    link.click();
+  });
+
+  // CHAT FUNCTIONALITY
+  const chatMessages = document.getElementById('chat-messages');
+  const chatInput = document.getElementById('chat-input');
+  const sendChatBtn = document.getElementById('send-chat');
+
+  function appendMessage(user, text) {
+    const msg = document.createElement('div');
+    msg.textContent = `${user}: ${text}`;
+    msg.style.marginBottom = '6px';
+    msg.style.padding = '6px 10px';
+    msg.style.borderRadius = '6px';
+    msg.style.background = user === 'Teacher' ? '#dff9fb' : '#c7ecee';
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  sendChatBtn.addEventListener('click', () => {
+    const text = chatInput.value.trim();
+    if(!text) return;
+    appendMessage('You', text);
+    chatInput.value = '';
+    setTimeout(() => {
+      appendMessage('Teacher', 'Thanks for your message!');
+    }, 1000);
+  });
+
+  chatInput.addEventListener('keypress', e => {
+    if(e.key === 'Enter') sendChatBtn.click();
+  });
+
+  // DRAG & DROP ASSIGNMENTS
+  const assignments = document.querySelectorAll('.assignment-item');
+  const timeline = document.getElementById('timeline');
+
+  assignments.forEach(assignment => {
+    assignment.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', assignment.id);
+      setTimeout(() => assignment.style.visibility = 'hidden', 0);
+    });
+    assignment.addEventListener('dragend', e => {
+      e.target.style.visibility = 'visible';
+    });
+    assignment.addEventListener('keydown', e => {
+      // Accessibility: allow spacebar to pick up assignment for drag (basic)
+      if(e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        alert('Use mouse drag to move this assignment.');
+      }
+    });
+  });
+
+  timeline.addEventListener('dragover', e => {
+    e.preventDefault();
+    timeline.classList.add('dragover');
+  });
+  timeline.addEventListener('dragleave', e => {
+    timeline.classList.remove('dragover');
+  });
+  timeline.addEventListener('drop', e => {
+    e.preventDefault();
+    timeline.classList.remove('dragover');
+    const id = e.dataTransfer.getData('text/plain');
+    const draggedElem = document.getElementById(id);
+    if (!draggedElem) return;
+    // Prevent duplicates in timeline
+    if([...timeline.children].some(child => child.id === id)) return;
+    const clone = draggedElem.cloneNode(true);
+    clone.style.visibility = 'visible';
+    clone.draggable = false;
+    timeline.appendChild(clone);
+  });
+
+  // QUIZ AUTO-GRADING
+  const quizForm = document.getElementById('quiz-form');
+  const quizFeedback = document.getElementById('quiz-feedback');
+  const answers = { q1: 'water', q2: 'mars' };
+
+  quizForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const formData = new FormData(quizForm);
+    let score = 0, total = Object.keys(answers).length;
+    for(let q in answers) {
+      if(formData.get(q) === answers[q]) score++;
+    }
+    quizFeedback.textContent = `You scored ${score} out of ${total} (${Math.round(score/total*100)}%)`;
+    quizFeedback.style.color = score === total ? '#27ae60' : '#c0392b';
+  });
+
+  // RESET CLASSROOM
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    // Clear whiteboard
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Clear chat
+    chatMessages.innerHTML = '';
+    // Reset assignments timeline
+    timeline.innerHTML = '';
+    // Reset quiz form
+    quizForm.reset();
+    quizFeedback.textContent = '';
+  });
+</script>
+</body>
+</html>

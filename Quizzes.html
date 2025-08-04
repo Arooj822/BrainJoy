@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create and Assign Quizzes - BrainJoy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+      color: #1a1a1a;
+    }
+    header {
+      background: linear-gradient(90deg, #B3D4FF, #007bff);
+      padding: 20px;
+      color: white;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    main {
+      max-width: 1200px;
+      margin: 30px auto;
+    }
+    .dashboard-section {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+    }
+    .dashboard-section h2 {
+      color: #0057b8;
+      font-size: 1.8rem;
+      font-weight: 500;
+      margin: 0 0 20px;
+    }
+    .quiz-form, .report-section, .student-access-section, .class-management-section {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .quiz-form label, .report-section label, .student-access-section label, .class-management-section label {
+      font-weight: 500;
+      color: #1a1a1a;
+      font-size: 1.1rem;
+    }
+    .quiz-form input, .quiz-form select, .quiz-form textarea, .report-section select, .student-access-section input, .class-management-section input, .class-management-section select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+    .quiz-form input:focus, .quiz-form select:focus, .quiz-form textarea:focus, .report-section select:focus, .student-access-section input:focus, .class-management-section input:focus, .class-management-section select:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+    .quiz-form input[type="checkbox"] {
+      width: auto;
+      margin-right: 10px;
+    }
+    .quiz-form .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+    }
+    .quiz-form button, .report-section button, .student-access-section button, .class-management-section button {
+      background: #007bff;
+      color: white;
+      font-weight: 500;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .quiz-form button:hover, .report-section button:hover, .student-access-section button:hover, .class-management-section button:hover {
+      background: #0057b8;
+    }
+    .question-container {
+      background: #f8fafc;
+      padding: 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+    .question-container h3 {
+      color: #0057b8;
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin: 0 0 15px;
+    }
+    .question-container .option-group {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .question-container .option-group input, .question-container .option-group select {
+      width: calc(100% - 24px);
+    }
+    .add-question-btn {
+      background: #28a745;
+      color: white;
+      font-weight: 500;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 15px;
+    }
+    .add-question-btn:hover {
+      background: #218838;
+    }
+    .question-instructions {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .report-section .chart-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .chart-box {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+    .chart-box h3 {
+      color: #0057b8;
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin: 0 0 15px;
+    }
+    .chart-box canvas {
+      max-width: 260px;
+      max-height: 260px;
+      margin: 0 auto;
+    }
+    .report-section .summary-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+    .summary-section h3 {
+      color: #0057b8;
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin: 0 0 15px;
+    }
+    .summary-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1rem;
+      color: #1a1a1a;
+    }
+    .summary-section ul li {
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .summary-section ul li strong {
+      color: #0057b8;
+    }
+    .insights-actions-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+    .insights-actions-section h3 {
+      color: #0057b8;
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin: 0 0 15px;
+    }
+    .insights-actions-section p {
+      font-size: 1rem;
+      color: #1a1a1a;
+      margin: 0 0 20px;
+    }
+    .insights-actions-section button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .insights-actions-section button:hover {
+      background: #0057b8;
+    }
+    .feedback-section {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    .feedback-section h4 {
+      color: #0057b8;
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin: 0 0 10px;
+    }
+    .feedback-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1rem;
+      color: #1a1a1a;
+    }
+    .feedback-section ul li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    .certificate-preview {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .certificate-preview h3 {
+      color: #0057b8;
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin: 0 0 10px;
+    }
+    .certificate-preview p {
+      font-size: 1rem;
+      color: #1a1a1a;
+      margin: 5px 0;
+    }
+    .verified-badge {
+      display: inline-block;
+      background: #28a745;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .class-list, .quiz-details, .public-questions {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    .class-list h3, .quiz-details h3, .public-questions h3 {
+      color: #0057b8;
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin: 0 0 15px;
+    }
+    .class-list table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1rem;
+    }
+    .class-list th, .class-list td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .class-list th {
+      background: #e5e7eb;
+      color: #0057b8;
+      font-weight: 500;
+    }
+    .class-list tr:hover {
+      background: #f1f3f5;
+    }
+    .quiz-details p, .public-questions p {
+      font-size: 1rem;
+      color: #1a1a1a;
+      margin: 5px 0;
+    }
+    .back-btn {
+      background: white;
+      color: #0057b8;
+      border: 1px solid #0057b8;
+      font-weight: 500;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 20px;
+    }
+    .back-btn:hover {
+      background: #0057b8;
+      color: white;
+    }
+    @media (max-width: 700px) {
+      .dashboard-section {
+        padding: 16px;
+      }
+      .chart-container {
+        grid-template-columns: 1fr;
+      }
+      .chart-box canvas {
+        max-width: 220px;
+        max-height: 220px;
+      }
+      .class-list table {
+        font-size: 0.9rem;
+      }
+      .question-container .option-group input, .question-container .option-group select {
+        width: calc(100% - 24px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Create and Assign Quizzes - BrainJoy</header>
+  <main>
+    <button class="back-btn" onclick="window.location.href='teacher-dashboard.html'">Back to Dashboard</button>
+    <div class="dashboard-section">
+      <h2>Class Management</h2>
+      <div class="class-management-section">
+        <h3>Create a Class</h3>
+        <form id="classCreationForm" class="class-management-section">
+          <label for="className">Class Name</label>
+          <input type="text" id="className" name="className" placeholder="e.g., Biology 11A" required aria-required="true">
+          <label for="classSubject">Subject</label>
+          <select id="classSubject" name="classSubject" required aria-required="true">
+            <option value="">-- Select Subject --</option>
+            <option value="english">English</option>
+            <option value="math">Math</option>
+            <option value="science">Science</option>
+            <option value="geography">Geography</option>
+            <option value="history">History</option>
+            <option value="ict">ICT / Computing</option>
+            <option value="art">Art</option>
+            <option value="music">Music</option>
+            <option value="physicalEducation">Physical Education</option>
+            <option value="arabic">Arabic</option>
+            <option value="french">French</option>
+            <option value="spanish">Spanish</option>
+            <option value="urdu">Urdu</option>
+            <option value="hindi">Hindi</option>
+            <option value="german">German</option>
+            <option value="islamicStudies">Islamic Studies</option>
+            <option value="moralEducation">Moral Education</option>
+            <option value="psychology">Psychology</option>
+            <option value="sociology">Sociology</option>
+            <option value="economics">Economics</option>
+            <option value="drama">Drama</option>
+            <option value="designTechnology">Design & Technology</option>
+            <option value="specialEducation">Special Education</option>
+            <option value="montessori">Montessori</option>
+            <option value="eyfs">EYFS</option>
+            <option value="apChemistry">AP Chemistry</option>
+            <option value="apBiology">AP Biology</option>
+            <option value="apPhysics">AP Physics</option>
+            <option value="britishChemistry">British Curriculum Chemistry</option>
+            <option value="britishBiology">British Curriculum Biology</option>
+            <option value="britishPhysics">British Curriculum Physics</option>
+            <option value="ibChemistry">IB Chemistry</option>
+            <option value="ibBiology">IB Biology</option>
+            <option value="ibPhysics">IB Physics</option>
+            <option value="cbseChemistry">CBSE Chemistry</option>
+            <option value="cbseBiology">CBSE Biology</option>
+            <option value="cbsePhysics">CBSE Physics</option>
+          </select>
+          <label for="classGrade">Grade Level</label>
+          <select id="classGrade" name="classGrade" required aria-required="true">
+            <option value="">-- Select Grade Level --</option>
+            <option value="eyfs">EYFS</option>
+            <option value="montessori">Montessori</option>
+            <option value="grade1">Grade 1</option>
+            <option value="grade2">Grade 2</option>
+            <option value="grade3">Grade 3</option>
+            <option value="grade4">Grade 4</option>
+            <option value="grade5">Grade 5</option>
+            <option value="grade6">Grade 6</option>
+            <option value="grade7">Grade 7</option>
+            <option value="grade8">Grade 8</option>
+            <option value="grade9">Grade 9</option>
+            <option value="grade10">Grade 10</option>
+            <option value="grade11">Grade 11</option>
+            <option value="grade12">Grade 12</option>
+          </select>
+          <button type="submit">Create Class</button>
+        </form>
+        <div class="class-list">
+          <h3>Created Classes</h3>
+          <table id="classTable">
+            <thead>
+              <tr>
+                <th>Class Name</th>
+                <th>Subject</th>
+                <th>Grade</th>
+                <th>Class Code</th>
+                <th>Students</th>
+              </tr>
+            </thead>
+            <tbody id="classTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="dashboard-section">
+      <h2>Create a Quiz</h2>
+      <form id="quizCreationForm" class="quiz-form">
+        <label for="quizTitle">Quiz Title</label>
+        <input type="text" id="quizTitle" name="quizTitle" placeholder="e.g., Photosynthesis Quiz" required aria-required="true">
+        <label for="subject">Subject</label>
+        <select id="subject" name="subject" required aria-required="true">
+          <option value="">-- Select Subject --</option>
+          <option value="english">English</option>
+          <option value="math">Math</option>
+          <option value="science">Science</option>
+          <option value="geography">Geography</option>
+          <option value="history">History</option>
+          <option value="ict">ICT / Computing</option>
+          <option value="art">Art</option>
+          <option value="music">Music</option>
+          <option value="physicalEducation">Physical Education</option>
+          <option value="arabic">Arabic</option>
+          <option value="french">French</option>
+          <option value="spanish">Spanish</option>
+          <option value="urdu">Urdu</option>
+          <option value="hindi">Hindi</option>
+          <option value="german">German</option>
+          <option value="islamicStudies">Islamic Studies</option>
+          <option value="moralEducation">Moral Education</option>
+          <option value="psychology">Psychology</option>
+          <option value="sociology">Sociology</option>
+          <option value="economics">Economics</option>
+          <option value="drama">Drama</option>
+          <option value="designTechnology">Design & Technology</option>
+          <option value="specialEducation">Special Education</option>
+          <option value="montessori">Montessori</option>
+          <option value="eyfs">EYFS</option>
+          <option value="apChemistry">AP Chemistry</option>
+          <option value="apBiology">AP Biology</option>
+          <option value="apPhysics">AP Physics</option>
+          <option value="britishChemistry">British Curriculum Chemistry</option>
+          <option value="britishBiology">British Curriculum Biology</option>
+          <option value="britishPhysics">British Curriculum Physics</option>
+          <option value="ibChemistry">IB Chemistry</option>
+          <option value="ibBiology">IB Biology</option>
+          <option value="ibPhysics">IB Physics</option>
+          <option value="cbseChemistry">CBSE Chemistry</option>
+          <option value="cbseBiology">CBSE Biology</option>
+          <option value="cbsePhysics">CBSE Physics</option>
+        </select>
+        <label for="curriculum">Curriculum</label>
+        <select id="curriculum" name="curriculum" required aria-required="true">
+          <option value="">-- Select Curriculum --</option>
+          <option value="british">British Curriculum (KS1, KS2, GCSE, A-levels)</option>
+          <option value="american">American Curriculum (Common Core, AP)</option>
+          <option value="ib">International Baccalaureate (IB)</option>
+          <option value="cbse">Indian Curriculum (CBSE, ICSE)</option>
+          <option value="montessori">Montessori</option>
+          <option value="eyfs">EYFS (Early Years Foundation Stage)</option>
+          <option value="canadian">Canadian Curriculum</option>
+          <option value="australian">Australian Curriculum</option>
+          <option value="french">French Baccalaureate</option>
+          <option value="german">German Abitur</option>
+          <option value="pakistani">Pakistani Curriculum</option>
+          <option value="japanese">Japanese Curriculum</option>
+          <option value="singapore">Singapore Curriculum</option>
+          <option value="southAfrican">South African Curriculum</option>
+          <option value="other">Other</option>
+        </select>
+        <label for="gradeLevel">Grade Level</label>
+        <select id="gradeLevel" name="gradeLevel" required aria-required="true">
+          <option value="">-- Select Grade Level --</option>
+          <option value="eyfs">EYFS</option>
+          <option value="montessori">Montessori</option>
+          <option value="grade1">Grade 1</option>
+          <option value="grade2">Grade 2</option>
+          <option value="grade3">Grade 3</option>
+          <option value="grade4">Grade 4</option>
+          <option value="grade5">Grade 5</option>
+          <option value="grade6">Grade 6</option>
+          <option value="grade7">Grade 7</option>
+          <option value="grade8">Grade 8</option>
+          <option value="grade9">Grade 9</option>
+          <option value="grade10">Grade 10</option>
+          <option value="grade11">Grade 11</option>
+          <option value="grade12">Grade 12</option>
+        </select>
+        <label for="questionType">Question Type</label>
+        <select id="questionType" name="questionType" required aria-required="true" onchange="updateQuestionInput()">
+          <option value="multiple-choice">Multiple Choice</option>
+          <option value="true-false">True/False</option>
+          <option value="fill-in-the-blanks">Fill-in-the-Blanks</option>
+          <option value="drag-and-drop">Drag-and-Drop</option>
+          <option value="audio-response">Audio Response</option>
+          <option value="file-submission">File Submission</option>
+          <option value="answer-question">Answer Question</option>
+        </select>
+        <div id="questionInputContainer">
+          <h3>Write Your Questions</h3>
+          <p class="question-instructions">Enter your quiz questions below. For Multiple Choice, provide four options and select the correct one. For True/False, select the correct answer. For Answer Question, provide the question and an optional expected answer. Add more questions as needed.</p>
+          <div id="questionsList"></div>
+          <button type="button" class="add-question-btn" onclick="addQuestion()">Add Another Question</button>
+        </div>
+        <label for="contentUpload">Upload Content for AI Quiz Generation (Optional)</label>
+        <input type="file" id="contentUpload" name="contentUpload" accept=".pdf,.docx,.txt">
+        <label>Advanced Features</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="adaptiveQuiz" name="adaptiveQuiz"> AI-Driven Adaptive Quiz</label>
+          <label><input type="checkbox" id="arQuiz" name="arQuiz"> AR Mode (3D Models)</label>
+          <label><input type="checkbox" id="voiceQuiz" name="voiceQuiz"> Voice-Interactive (Multilingual)</label>
+          <label><input type="checkbox" id="peerQuiz" name="peerQuiz"> Peer-Created Questions</label>
+          <label><input type="checkbox" id="emotionAnalytics" name="emotionAnalytics"> Emotion-Aware Analytics</label>
+          <label><input type="checkbox" id="blockchainCert" name="blockchainCert"> Blockchain-Verified Certificates</label>
+          <label><input type="checkbox" id="curriculumAlignment" name="curriculumAlignment"> Predictive Curriculum Alignment</label>
+        </div>
+        <label for="quizSettings">Quiz Settings</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="timedQuiz" name="timedQuiz"> Timed Quiz</label>
+          <label><input type="checkbox" id="randomizeQuestions" name="randomizeQuestions"> Randomize Questions</label>
+          <label><input type="checkbox" id="hideScores" name="hideScores"> Hide Scores Until Review</label>
+          <label><input type="checkbox" id="gamification" name="gamification"> Gamification (Points & Leaderboard)</label>
+          <label><input type="checkbox" id="makePublic" name="makePublic"> Make Quiz Public</label>
+        </div>
+        <label for="assignToClass">Assign to Class (Optional)</label>
+        <select id="assignToClass" name="assignToClass">
+          <option value="">-- Select Class (or share quiz code/link) --</option>
+        </select>
+        <button type="submit">Create and Assign Quiz</button>
+      </form>
+    </div>
+    <div class="dashboard-section">
+      <h2>Quiz Reports: Attainment and Progress</h2>
+      <div class="report-section">
+        <label for="selectQuiz">Select Quiz to View Report</label>
+        <select id="selectQuiz" name="selectQuiz" onchange="generateReport()">
+          <option value="photosynthesis">Photosynthesis Quiz (IB Biology, Grade 11)</option>
+          <option value="atomicStructure">Atomic Structure Quiz (AP Chemistry, Grade 12)</option>
+          <option value="industrialRevolution">Industrial Revolution Quiz (British Curriculum History, Grade 9)</option>
+        </select>
+        <button onclick="generateReport()">Generate Report</button>
+        <div class="public-questions" id="publicQuestions" style="display: none;">
+          <h3>Public Question Paper</h3>
+          <div id="publicQuestionsList"></div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-box">
+            <h3>Score Distribution</h3>
+            <canvas id="attainmentChart"></canvas>
+            <p>Percentage of students in each score range, aligned with curriculum standards.</p>
+          </div>
+          <div class="chart-box">
+            <h3>Score Improvement</h3>
+            <canvas id="progressChart"></canvas>
+            <p>Average score trends over multiple quizzes.</p>
+          </div>
+          <div class="chart-box">
+            <h3>Emotional Engagement</h3>
+            <canvas id="emotionChart"></canvas>
+            <p>AI-detected emotional states during the quiz.</p>
+          </div>
+          <div class="chart-box">
+            <h3>Performance Categories</h3>
+            <canvas id="studentPerformanceChart"></canvas>
+            <p>Distribution of Mastery (81-100%), Developing (41-80%), and Weak (0-40%).</p>
+          </div>
+        </div>
+        <div class="summary-section">
+          <h3>Key Insights</h3>
+          <ul>
+            <li><strong>Class Average:</strong> 78% (meets IB Biology standards)</li>
+            <li><strong>Performance:</strong> 40% Mastery, 45% Developing, 15% Weak</li>
+            <li><strong>Progress:</strong> 15% average score improvement</li>
+            <li><strong>Emotional Insights:</strong> 20% showed confusion on Question 3</li>
+            <li><strong>Curriculum Gap:</strong> Reteach cellular respiration (60% incorrect)</li>
+            <li><strong>Certificates:</strong> Blockchain-verified for students scoring above 80%</li>
+          </ul>
+          <button onclick="downloadReport()">Download PDF Report</button>
+          <button onclick="downloadCertificate()">Download Sample Certificate</button>
+        </div>
+        <div class="insights-actions-section">
+          <h3>Quiz Insights & Actions</h3>
+          <p>Review detailed feedback, identify reteaching needs, and issue blockchain-verified certificates.</p>
+          <div class="feedback-section">
+            <h4>General Feedback</h4>
+            <ul>
+              <li>Class average: 78%; focus on reteaching cellular respiration (Question 3, 60% incorrect).</li>
+              <li>EAL Support: 10% of EAL students struggled with terminology; use voice explanations in Arabic/Urdu.</li>
+            </ul>
+          </div>
+          <div class="feedback-section">
+            <h4>Student-Specific Feedback</h4>
+            <ul>
+              <li><strong>Student A:</strong> 90% (Mastery), confident, mastered photosynthesis.</li>
+              <li><strong>Student B:</strong> 60% (Developing), struggled on Question 3, needs reteaching.</li>
+              <li><strong>Student C:</strong> 80% (Developing), engaged, recommend advanced questions.</li>
+            </ul>
+          </div>
+          <div class="feedback-section">
+            <h4>Quiz Questions</h4>
+            <ul>
+              <li>Q1: What is the primary source of energy for Earth's climate system? (2 marks)</li>
+              <li>Q2: Describe the role of chlorophyll in photosynthesis. (3 marks)</li>
+              <li>Q3: Explain the process of cellular respiration. (5 marks)</li>
+            </ul>
+          </div>
+          <div class="certificate-preview" id="certificatePreview">
+            <h3>Blockchain Certificate Sample</h3>
+            <p><strong>Student:</strong> Student A</p>
+            <p><strong>Quiz:</strong> Photosynthesis Quiz (IB Biology, Grade 11)</p>
+            <p><strong>Score:</strong> 90%</p>
+            <p><strong>Certificate ID:</strong> 0xabc123</p>
+            <p><strong>Transaction Hash:</strong> 0xdef456</p>
+            <div class="verified-badge">Blockchain Verified</div>
+          </div>
+          <button onclick="issueBlockchainCertificates()">Issue Blockchain Certificates</button>
+        </div>
+      </div>
+    </div>
+    <div class="dashboard-section">
+      <h2>Student Access</h2>
+      <div class="student-access-section">
+        <h3>Join a Class or Quiz</h3>
+        <label for="classCodeInput">Enter Class Code</label>
+        <input type="text" id="classCodeInput" name="classCodeInput" placeholder="e.g., ABC123">
+        <button onclick="joinClass()">Join Class</button>
+        <label for="quizCodeInput">Enter Quiz Code</label>
+        <input type="text" id="quizCodeInput" name="quizCodeInput" placeholder="e.g., XYZ123">
+        <button onclick="joinQuiz()">Join Quiz</button>
+        <div class="quiz-details" id="quizDetails" style="display: none;">
+          <h3>Quiz Details</h3>
+          <p id="quizDetailTitle"></p>
+          <p id="quizDetailSubject"></p>
+          <p id="quizDetailInstructions">Instructions: Follow the quiz link or enter this code on your device to start the quiz.</p>
+          <div id="quizQuestions" style="display: none;">
+            <h4>Question Paper</h4>
+            <div id="quizQuestionsList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mockBackend = {
+        createClass: (name, subject, grade) => {
+          const classCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+          return {
+            success: true,
+            classId: `class_${Date.now()}`,
+            classCode: classCode,
+            message: `Class ${name} created with code ${classCode}.`
+          };
+        },
+        createAdaptiveQuiz: (title, subject, curriculum, grade, questions, isPublic) => ({
+          success: true,
+          quizId: `quiz_${Date.now()}`,
+          quizCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
+          quizLink: `https://brainjoy.com/quiz/${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+          questions: questions,
+          isPublic: isPublic,
+          message: 'Adaptive quiz created with dynamic difficulty adjustment.'
+        }),
+        processVoiceQuiz: () => ({
+          success: true,
+          languages: ['English', 'Arabic', 'Urdu']
+        }),
+        peerQuizSubmission: () => ({
+          success: true,
+          questions: ['Q1: What is ATP?', 'Q2: Define osmosis']
+        }),
+        emotionAnalytics: () => ({
+          success: true,
+          data: { confident: 50, confused: 20, stressed: 10, engaged: 20 }
+        }),
+        issueBlockchainCert: () => ({
+          success: true,
+          certId: '0xabc123',
+          txHash: '0xdef456',
+          students: ['Student A', 'Student B']
+        }),
+        curriculumAlignment: (subject, curriculum) => ({
+          success: true,
+          gaps: ['Cellular respiration needs reteaching']
+        }),
+        applyQuizSettings: (settings) => ({
+          success: true,
+          settingsApplied: settings
+        }),
+        joinClass: (classCode) => ({
+          success: classCode === 'ABC123',
+          classDetails: classCode === 'ABC123' ? { name: 'Biology 11A', subject: 'IB Biology', grade: 'Grade 11', quizzes: ['Photosynthesis Quiz'] } : null,
+          message: classCode === 'ABC123' ? 'Joined class successfully.' : 'Invalid class code.'
+        }),
+        joinQuiz: (quizCode) => ({
+          success: quizCode === 'XYZ123',
+          quizDetails: quizCode === 'XYZ123' ? { 
+            title: 'Photosynthesis Quiz', 
+            subject: 'IB Biology', 
+            curriculum: 'IB', 
+            grade: 'Grade 11', 
+            quizLink: 'https://brainjoy.com/quiz/XYZ123',
+            isPublic: true,
+            questions: [
+              { type: 'multiple-choice', text: 'What is the primary source of energy for Earth\'s climate system?', options: ['Sun', 'Moon', 'Wind', 'Ocean'], correct: 'Sun', marks: 2 },
+              { type: 'true-false', text: 'Chlorophyll is involved in cellular respiration.', correct: 'False', marks: 1 },
+              { type: 'answer-question', text: 'Describe the role of chlorophyll in photosynthesis.', expectedAnswer: 'Chlorophyll absorbs light energy to drive photosynthesis.', marks: 3 }
+            ]
+          } : null,
+          message: quizCode === 'XYZ123' ? 'Quiz accessed successfully.' : 'Invalid quiz code.'
+        }),
+        getQuizData: () => ({
+          questions: [
+            { text: 'What is the primary source of energy for Earth\'s climate system?', maxMarks: 2 },
+            { text: 'Describe the role of chlorophyll in photosynthesis.', maxMarks: 3 },
+            { text: 'Explain the process of cellular respiration.', maxMarks: 5 }
+          ],
+          studentData: [
+            { name: 'Student A', marks: [2, 3, 4], timeTaken: [60, 120, 180], total: 9, category: 'Mastery' },
+            { name: 'Student B', marks: [2, 2, 2], timeTaken: [90, 150, 240], total: 6, category: 'Developing' },
+            { name: 'Student C', marks: [2, 3, 3], timeTaken: [60, 120, 210], total: 8, category: 'Developing' }
+          ],
+          performanceCategories: { mastery: 40, developing: 45, weak: 15 },
+          scoreDistribution: [5, 10, 15, 30, 40],
+          scoreImprovement: [65, 70, 78, 85],
+          emotionalEngagement: { confident: 50, confused: 20, stressed: 10, engaged: 20 }
+        })
+      };
+
+      let classes = [];
+      let chartInstances = {};
+      let questions = [];
+      let createdQuizzes = [];
+
+      function updateQuestionInput() {
+        const questionType = document.getElementById('questionType').value;
+        const questionInputContainer = document.getElementById('questionInputContainer');
+        questionInputContainer.style.display = ['multiple-choice', 'true-false', 'answer-question'].includes(questionType) ? 'block' : 'none';
+        if (['multiple-choice', 'true-false', 'answer-question'].includes(questionType)) {
+          if (questions.length === 0) {
+            addQuestion();
+          }
+        } else {
+          questions = [];
+          document.getElementById('questionsList').innerHTML = '';
+        }
+      }
+
+      function addQuestion() {
+        const questionType = document.getElementById('questionType').value;
+        const questionsList = document.getElementById('questionsList');
+        const questionIndex = questions.length;
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question-container';
+        questionDiv.id = `question-${questionIndex}`;
+        if (questionType === 'multiple-choice') {
+          questionDiv.innerHTML = `
+            <h3>Question ${questionIndex + 1}</h3>
+            <label for="questionText-${questionIndex}">Question Text</label>
+            <input type="text" id="questionText-${questionIndex}" placeholder="Enter question text (e.g., What is 2+2?)" required>
+            <div class="option-group">
+              <label for="option1-${questionIndex}">Option 1</label>
+              <input type="text" id="option1-${questionIndex}" placeholder="Enter option 1 (e.g., 2)" required>
+              <label for="option2-${questionIndex}">Option 2</label>
+              <input type="text" id="option2-${questionIndex}" placeholder="Enter option 2 (e.g., 3)" required>
+              <label for="option3-${questionIndex}">Option 3</label>
+              <input type="text" id="option3-${questionIndex}" placeholder="Enter option 3 (e.g., 4)" required>
+              <label for="option4-${questionIndex}">Option 4</label>
+              <input type="text" id="option4-${questionIndex}" placeholder="Enter option 4 (e.g., 5)" required>
+              <label for="correctOption-${questionIndex}">Correct Option</label>
+              <select id="correctOption-${questionIndex}" required>
+                <option value="">-- Select Correct Option --</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+                <option value="4">Option 4</option>
+              </select>
+              <label for="marks-${questionIndex}">Marks</label>
+              <input type="number" id="marks-${questionIndex}" placeholder="Enter marks (e.g., 2)" min="1" required>
+            </div>
+          `;
+        } else if (questionType === 'true-false') {
+          questionDiv.innerHTML = `
+            <h3>Question ${questionIndex + 1}</h3>
+            <label for="questionText-${questionIndex}">Question Text</label>
+            <input type="text" id="questionText-${questionIndex}" placeholder="Enter question text (e.g., 1+1=11?)" required>
+            <label for="correctOption-${questionIndex}">Correct Answer</label>
+            <select id="correctOption-${questionIndex}" required>
+              <option value="">-- Select Correct Answer --</option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select>
+            <label for="marks-${questionIndex}">Marks</label>
+            <input type="number" id="marks-${questionIndex}" placeholder="Enter marks (e.g., 1)" min="1" required>
+          `;
+        } else if (questionType === 'answer-question') {
+          questionDiv.innerHTML = `
+            <h3>Question ${questionIndex + 1}</h3>
+            <label for="questionText-${questionIndex}">Question Text</label>
+            <input type="text" id="questionText-${questionIndex}" placeholder="Enter question text (e.g., Describe photosynthesis)" required>
+            <label for="expectedAnswer-${questionIndex}">Expected Answer (Optional)</label>
+            <textarea id="expectedAnswer-${questionIndex}" placeholder="Enter expected answer for grading (optional)"></textarea>
+            <label for="marks-${questionIndex}">Marks</label>
+            <input type="number" id="marks-${questionIndex}" placeholder="Enter marks (e.g., 3)" min="1" required>
+          `;
+        }
+        questionsList.appendChild(questionDiv);
+        questions.push({ type: questionType, index: questionIndex });
+      }
+
+      window.addQuestion = addQuestion;
+
+      document.getElementById('quizCreationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const title = document.getElementById('quizTitle').value;
+        const subject = document.getElementById('subject').options[document.getElementById('subject').selectedIndex].text;
+        const curriculum = document.getElementById('curriculum').options[document.getElementById('curriculum').selectedIndex].text;
+        const grade = document.getElementById('gradeLevel').options[document.getElementById('gradeLevel').selectedIndex].text;
+        const questionType = document.getElementById('questionType').value;
+        const contentUpload = document.getElementById('contentUpload').files[0]?.name || 'None';
+        const isPublic = document.getElementById('makePublic').checked;
+        const features = [];
+        const settings = [];
+        const collectedQuestions = [];
+
+        if (['multiple-choice', 'true-false', 'answer-question'].includes(questionType)) {
+          questions.forEach(q => {
+            const questionText = document.getElementById(`questionText-${q.index}`).value;
+            const marks = document.getElementById(`marks-${q.index}`).value;
+            if (q.type === 'multiple-choice') {
+              const options = [
+                document.getElementById(`option1-${q.index}`).value,
+                document.getElementById(`option2-${q.index}`).value,
+                document.getElementById(`option3-${q.index}`).value,
+                document.getElementById(`option4-${q.index}`).value
+              ];
+              const correctOption = document.getElementById(`correctOption-${q.index}`).options[document.getElementById(`correctOption-${q.index}`).selectedIndex].text;
+              collectedQuestions.push({
+                type: q.type,
+                text: questionText,
+                options: options,
+                correct: correctOption.replace('Option ', ''),
+                marks: parseInt(marks)
+              });
+            } else if (q.type === 'true-false') {
+              const correctOption = document.getElementById(`correctOption-${q.index}`).value;
+              collectedQuestions.push({
+                type: q.type,
+                text: questionText,
+                correct: correctOption,
+                marks: parseInt(marks)
+              });
+            } else if (q.type === 'answer-question') {
+              const expectedAnswer = document.getElementById(`expectedAnswer-${q.index}`).value || 'N/A';
+              collectedQuestions.push({
+                type: q.type,
+                text: questionText,
+                expectedAnswer: expectedAnswer,
+                marks: parseInt(marks)
+              });
+            }
+          });
+        }
+
+        ['adaptiveQuiz', 'arQuiz', 'voiceQuiz', 'peerQuiz', 'emotionAnalytics', 'blockchainCert', 'curriculumAlignment', 'makePublic'].forEach(id => {
+          if (document.getElementById(id).checked) features.push(id.replace(/([A-Z])/g, ' $1').trim());
+        });
+        ['timedQuiz', 'randomizeQuestions', 'hideScores', 'gamification'].forEach(id => {
+          if (document.getElementById(id).checked) settings.push(id.replace(/([A-Z])/g, ' $1').trim());
+        });
+        const assignToClass = document.getElementById('assignToClass').value;
+        const className = assignToClass ? classes.find(cls => cls.id === assignToClass)?.name : 'Not assigned to a class';
+
+        const quizResult = mockBackend.createAdaptiveQuiz(title, subject, curriculum, grade, collectedQuestions, isPublic);
+        createdQuizzes.push({
+          id: quizResult.quizId,
+          title,
+          quizCode: quizResult.quizCode,
+          quizLink: quizResult.quizLink,
+          questions: collectedQuestions,
+          isPublic
+        });
+
+        let featureResults = [];
+        if (features.includes('AI Driven Adaptive Quiz')) {
+          featureResults.push(`AI-Driven Adaptive Quiz: ${quizResult.message}`);
+        }
+        if (features.includes('Voice Interactive')) {
+          const result = mockBackend.processVoiceQuiz();
+          featureResults.push(`Voice-Interactive: Supports ${result.languages.join(', ')}`);
+        }
+        if (features.includes('Peer Created Questions')) {
+          const result = mockBackend.peerQuizSubmission();
+          featureResults.push(`Peer-Created Questions: ${result.questions.length} questions added`);
+        }
+        if (features.includes('Emotion Aware Analytics')) {
+          const result = mockBackend.emotionAnalytics();
+          featureResults.push(`Emotion-Aware Analytics: Data processed (${JSON.stringify(result.data)})`);
+        }
+        if (features.includes('Blockchain Verified Certificates')) {
+          const result = mockBackend.issueBlockchainCert();
+          featureResults.push(`Blockchain Certificates: Issued for ${result.students.join(', ')}`);
+        }
+        if (features.includes('Predictive Curriculum Alignment')) {
+          const result = mockBackend.curriculumAlignment(subject, curriculum);
+          featureResults.push(`Curriculum Alignment: ${result.gaps.join(', ')}`);
+        }
+        if (settings.length > 0) {
+          const result = mockBackend.applyQuizSettings(settings);
+          featureResults.push(`Quiz Settings: ${result.settingsApplied.join(', ') || 'None'} applied`);
+        }
+
+        alert(`Quiz "${title}" (${subject}, ${curriculum}, ${grade}) created!\nAssigned to: ${className}\nQuiz Code: ${quizResult.quizCode}\nQuiz Link: ${quizResult.quizLink}\nQuestion Type: ${questionType}\nQuestions:\n${collectedQuestions.length > 0 ? collectedQuestions.map((q, i) => `Q${i+1}: ${q.text} (${q.marks} marks)${q.type === 'multiple-choice' ? '\n  Options: ' + q.options.join(', ') + '\n  Correct: Option ' + q.correct : q.type === 'true-false' ? '\n  Correct: ' + q.correct : '\n  Expected Answer: ' + q.expectedAnswer}`).join('\n') : 'None'}\nPublic: ${isPublic ? 'Yes' : 'No'}\nContent Upload: ${contentUpload}\nFeatures: ${features.join(', ') || 'None'}\nSettings: ${settings.join(', ') || 'None'}\nResults:\n${featureResults.join('\n')}\nShare the quiz code or link with students to join directly, or assign to a class for automatic access.`);
+        console.log('Quiz Data:', { title, subject, curriculum, grade, questionType, questions: collectedQuestions, isPublic, contentUpload, features, settings, assignToClass, quizCode: quizResult.quizCode, quizLink: quizResult.quizLink });
+
+        this.reset();
+        questions = [];
+        document.getElementById('questionsList').innerHTML = '';
+        document.getElementById('questionInputContainer').style.display = 'block';
+        addQuestion();
+
+        if (isPublic) {
+          updatePublicQuestions(quizResult.quizId);
+        }
+      });
+
+      function updatePublicQuestions(quizId) {
+        const quiz = createdQuizzes.find(q => q.id === quizId);
+        const publicQuestions = document.getElementById('publicQuestions');
+        const publicQuestionsList = document.getElementById('publicQuestionsList');
+        if (quiz && quiz.isPublic) {
+          publicQuestions.style.display = 'block';
+          publicQuestionsList.innerHTML = `<h4>${quiz.title}</h4>`;
+          quiz.questions.forEach((q, i) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.innerHTML = `<p><strong>Q${i+1}:</strong> ${q.text} (${q.marks} marks)</p>`;
+            if (q.type === 'multiple-choice') {
+              questionDiv.innerHTML += `<ul>${q.options.map(opt => `<li>${opt}</li>`).join('')}</ul>`;
+            } else if (q.type === 'true-false') {
+              questionDiv.innerHTML += `<p>Options: True, False</p>`;
+            } else if (q.type === 'answer-question') {
+              questionDiv.innerHTML += `<p>Expected Answer: ${q.expectedAnswer}</p>`;
+            }
+            publicQuestionsList.appendChild(questionDiv);
+          });
+        } else {
+          publicQuestions.style.display = 'none';
+        }
+      }
+
+      function generateReport() {
+        const quizData = mockBackend.getQuizData();
+        const attainmentChartCanvas = document.getElementById('attainmentChart').getContext('2d');
+        const progressChartCanvas = document.getElementById('progressChart').getContext('2d');
+        const emotionChartCanvas = document.getElementById('emotionChart').getContext('2d');
+        const studentPerformanceChartCanvas = document.getElementById('studentPerformanceChart').getContext('2d');
+
+        Object.values(chartInstances).forEach(chart => chart && chart.destroy());
+
+        chartInstances.attainmentChart = new Chart(attainmentChartCanvas, {
+          type: 'bar',
+          data: {
+            labels: ['0-20%', '21-40%', '41-60%', '61-80%', '81-100%'],
+            datasets: [{
+              label: 'Student Scores',
+              data: quizData.scoreDistribution,
+              backgroundColor: ['#B3D4FF', '#B3D4FF', '#B3D4FF', '#B3D4FF', '#B3D4FF'],
+              borderColor: ['#80B3FF', '#80B3FF', '#80B3FF', '#80B3FF', '#80B3FF'],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Number of Students', font: { size: 14, family: 'Roboto' } },
+                ticks: { stepSize: 10, font: { family: 'Roboto' } }
+              },
+              x: {
+                title: { display: true, text: 'Score Range', font: { size: 14, family: 'Roboto' } },
+                ticks: { font: { family: 'Roboto' } }
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              title: { display: true, text: 'Score Distribution', font: { size: 16, family: 'Roboto' } }
+            }
+          }
+        });
+
+        chartInstances.progressChart = new Chart(progressChartCanvas, {
+          type: 'line',
+          data: {
+            labels: ['Quiz 1', 'Quiz 2', 'Quiz 3', 'Quiz 4'],
+            datasets: [{
+              label: 'Average Score',
+              data: quizData.scoreImprovement,
+              borderColor: '#C3E6CB',
+              backgroundColor: '#C3E6CB',
+              fill: false,
+              tension: 0.4,
+              pointBackgroundColor: '#C3E6CB',
+              pointBorderColor: '#ffffff',
+              pointBorderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                title: { display: true, text: 'Average Score (%)', font: { size: 14, family: 'Roboto' } },
+                ticks: { stepSize: 10, font: { family: 'Roboto' } }
+              },
+              x: {
+                title: { display: true, text: 'Quiz Number', font: { size: 14, family: 'Roboto' } },
+                ticks: { font: { family: 'Roboto' } }
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              title: { display: true, text: 'Score Improvement', font: { size: 16, family: 'Roboto' } }
+            }
+          }
+        });
+
+        chartInstances.emotionChart = new Chart(emotionChartCanvas, {
+          type: 'pie',
+          data: {
+            labels: ['Confident', 'Confused', 'Stressed', 'Engaged'],
+            datasets: [{
+              data: [
+                quizData.emotionalEngagement.confident,
+                quizData.emotionalEngagement.confused,
+                quizData.emotionalEngagement.stressed,
+                quizData.emotionalEngagement.engaged
+              ],
+              backgroundColor: ['#C3E6CB', '#FFE5B4', '#F5C6CB', '#B3D4FF'],
+              borderColor: ['#ffffff', '#ffffff', '#ffffff', '#ffffff'],
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { font: { size: 12, family: 'Roboto' }, boxWidth: 20 }
+              },
+              title: { display: true, text: 'Emotional Engagement', font: { size: 16, family: 'Roboto' } }
+            }
+          }
+        });
+
+        chartInstances.studentPerformanceChart = new Chart(studentPerformanceChartCanvas, {
+          type: 'pie',
+          data: {
+            labels: ['Mastery (81-100%)', 'Developing (41-80%)', 'Weak (0-40%)'],
+            datasets: [{
+              data: [
+                quizData.performanceCategories.mastery,
+                quizData.performanceCategories.developing,
+                quizData.performanceCategories.weak
+              ],
+              backgroundColor: ['#B3D4FF', '#C3E6CB', '#F5C6CB'],
+              borderColor: ['#ffffff', '#ffffff', '#ffffff'],
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { font: { size: 12, family: 'Roboto' }, boxWidth: 20 }
+              },
+              title: { display: true, text: 'Performance Categories', font: { size: 16, family: 'Roboto' } }
+            }
+          }
+        });
+
+        const selectedQuiz = document.getElementById('selectQuiz').value;
+        const quiz = createdQuizzes.find(q => q.title.includes(selectedQuiz));
+        updatePublicQuestions(quiz ? quiz.id : null);
+
+        alert('Report generated! Charts for Score Distribution, Score Improvement, Emotional Engagement, and Performance Categories are now displayed.');
+      }
+
+      document.getElementById('classCreationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('className').value;
+        const subject = document.getElementById('classSubject').options[document.getElementById('classSubject').selectedIndex].text;
+        const grade = document.getElementById('classGrade').options[document.getElementById('classGrade').selectedIndex].text;
+        const result = mockBackend.createClass(name, subject, grade);
+        classes.push({ id: result.classId, name, subject, grade, code: result.classCode, students: 0 });
+        updateClassTable();
+        updateClassDropdown();
+        alert(`Class "${name}" created!\nSubject: ${subject}\nGrade: ${grade}\nClass Code: ${result.classCode}\nShare this code with students to join the class.`);
+        this.reset();
+      });
+
+      function updateClassTable() {
+        const tableBody = document.getElementById('classTableBody');
+        tableBody.innerHTML = '';
+        classes.forEach(cls => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${cls.name}</td>
+            <td>${cls.subject}</td>
+            <td>${cls.grade}</td>
+            <td>${cls.code}</td>
+            <td>${cls.students}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      function updateClassDropdown() {
+        const assignToClass = document.getElementById('assignToClass');
+        assignToClass.innerHTML = '<option value="">-- Select Class (or share quiz code/link) --</option>';
+        classes.forEach(cls => {
+          const option = document.createElement('option');
+          option.value = cls.id;
+          option.textContent = `${cls.name} (${cls.subject}, ${cls.grade})`;
+          assignToClass.appendChild(option);
+        });
+      }
+
+      window.joinClass = function() {
+        const classCode = document.getElementById('classCodeInput').value.toUpperCase();
+        const result = mockBackend.joinClass(classCode);
+        const quizDetails = document.getElementById('quizDetails');
+        const quizQuestions = document.getElementById('quizQuestions');
+        if (result.success) {
+          quizDetails.style.display = 'block';
+          quizQuestions.style.display = 'none';
+          document.getElementById('quizDetailTitle').textContent = `Class: ${result.classDetails.name}`;
+          document.getElementById('quizDetailSubject').textContent = `Subject: ${result.classDetails.subject}, Grade: ${result.classDetails.grade}`;
+          document.getElementById('quizDetailInstructions').textContent = `Instructions: You have joined ${result.classDetails.name}. Available quizzes: ${result.classDetails.quizzes.join(', ')}. Access quizzes through your student dashboard.`;
+          alert(result.message);
+        } else {
+          quizDetails.style.display = 'none';
+          quizQuestions.style.display = 'none';
+          alert(result.message);
+        }
+        document.getElementById('classCodeInput').value = '';
+        document.getElementById('quizCodeInput').value = '';
+      };
+
+      window.joinQuiz = function() {
+        const quizCode = document.getElementById('quizCodeInput').value.toUpperCase();
+        const result = mockBackend.joinQuiz(quizCode);
+        const quizDetails = document.getElementById('quizDetails');
+        const quizQuestions = document.getElementById('quizQuestions');
+        const quizQuestionsList = document.getElementById('quizQuestionsList');
+        if (result.success) {
+          quizDetails.style.display = 'block';
+          document.getElementById('quizDetailTitle').textContent = `Quiz: ${result.quizDetails.title}`;
+          document.getElementById('quizDetailSubject').textContent = `Subject: ${result.quizDetails.subject}, Grade: ${result.quizDetails.grade}`;
+          document.getElementById('quizDetailInstructions').textContent = `Instructions: Access the quiz at ${result.quizDetails.quizLink} or use code ${quizCode} on your device to start.`;
+          if (result.quizDetails.isPublic) {
+            quizQuestions.style.display = 'block';
+            quizQuestionsList.innerHTML = '';
+            result.quizDetails.questions.forEach((q, i) => {
+              const questionDiv = document.createElement('div');
+              questionDiv.innerHTML = `<p><strong>Q${i+1}:</strong> ${q.text} (${q.marks} marks)</p>`;
+              if (q.type === 'multiple-choice') {
+                questionDiv.innerHTML += `<ul>${q.options.map(opt => `<li>${opt}</li>`).join('')}</ul>`;
+              } else if (q.type === 'true-false') {
+                questionDiv.innerHTML += `<p>Options: True, False</p>`;
+              } else if (q.type === 'answer-question') {
+                questionDiv.innerHTML += `<p>Short Answer Question</p>`;
+              }
+              quizQuestionsList.appendChild(questionDiv);
+            });
+          } else {
+            quizQuestions.style.display = 'none';
+          }
+          alert(result.message);
+        } else {
+          quizDetails.style.display = 'none';
+          quizQuestions.style.display = 'none';
+          alert(result.message);
+        }
+        document.getElementById('classCodeInput').value = '';
+        document.getElementById('quizCodeInput').value = '';
+      };
+
+      window.issueBlockchainCertificates = function() {
+        const result = mockBackend.issueBlockchainCert();
+        const preview = document.getElementById('certificatePreview');
+        preview.innerHTML = `
+          <h3>Blockchain Certificate Sample</h3>
+          <p><strong>Student:</strong> ${result.students[0]}</p>
+          <p><strong>Quiz:</strong> ${document.getElementById('selectQuiz').options[document.getElementById('selectQuiz').selectedIndex].text}</p>
+          <p><strong>Score:</strong> 90%</p>
+          <p><strong>Certificate ID:</strong> ${result.certId}</p>
+          <p><strong>Transaction Hash:</strong> ${result.txHash}</p>
+          <div class="verified-badge">Blockchain Verified</div>
+        `;
+        alert(`Issuing blockchain-verified certificates for students scoring above 80%.\nResult: Certificates issued for ${result.students.join(', ')} (Cert ID: ${result.certId}, Tx Hash: ${result.txHash}).`);
+        console.log('Blockchain Certificates:', result);
+      };
+
+      window.downloadCertificate = function() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
+        const certData = mockBackend.issueBlockchainCert();
+        const quizTitle = document.getElementById('selectQuiz').options[document.getElementById('selectQuiz').selectedIndex].text;
+
+        doc.setFont('Roboto', 'normal', '700');
+        doc.setFontSize(20);
+        doc.setTextColor(0, 87, 184);
+        doc.text('BrainJoy Certificate of Achievement', 105, 20, { align: 'center' });
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Student: ${certData.students[0]}`, 20, 40);
+        doc.text(`Quiz: ${quizTitle}`, 20, 50);
+        doc.text('Score: 90%', 20, 60);
+        doc.text(`Certificate ID: ${certData.certId}`, 20, 70);
+        doc.text(`Transaction Hash: ${certData.txHash}`, 20, 80);
+        doc.setFillColor(40, 167, 69);
+        doc.rect(20, 90, 40, 10, 'F');
+        doc.setFontSize(10);
+        doc.setTextColor(255, 255, 255);
+        doc.text('Blockchain Verified', 25, 95.5);
+        doc.save(`certificate_${certData.students[0]}.pdf`);
+      };
+
+      window.downloadReport = async function() {
+  // Verify required libraries
+  if (!window.jspdf || !window.html2canvas || !window.Chart) {
+    alert('Required libraries (jsPDF, html2canvas, or Chart.js) failed to load. Please check your internet connection and try again.');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  // Get quiz data
+  const selectQuiz = document.getElementById('selectQuiz');
+  if (!selectQuiz || !selectQuiz.options[selectQuiz.selectedIndex]) {
+    alert('No quiz selected. Please select a quiz and generate the report first.');
+    return;
+  }
+  const quizTitle = selectQuiz.options[selectQuiz.selectedIndex].text;
+  const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const quizData = mockBackend.getQuizData();
+  const certData = mockBackend.issueBlockchainCert();
+  const selectedQuiz = createdQuizzes.find(q => q.title.includes(selectQuiz.value)) || {};
+
+  // Verify charts
+  const chartIds = ['attainmentChart', 'progressChart', 'emotionChart', 'studentPerformanceChart'];
+  if (!chartIds.every(id => chartInstances[id] && document.getElementById(id))) {
+    alert('Charts are not fully rendered. Please click "Generate Report" first.');
+    return;
+  }
+
+  // Set font (helvetica as fallback)
+  doc.setFont('helvetica', 'normal');
+
+  // Header
+  let yOffset = 20;
+  doc.setFontSize(20);
+  doc.setTextColor(0, 87, 184);
+  doc.setFont('helvetica', 'bold');
+  doc.text('BrainJoy Quiz Report', 105, yOffset, { align: 'center' });
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont('helvetica', 'normal');
+  yOffset += 10;
+  doc.text(`Quiz: ${quizTitle}`, 20, yOffset);
+  yOffset += 10;
+  doc.text(`Date: ${date}`, 20, yOffset);
+  yOffset += 10;
+  doc.setLineWidth(0.5);
+  doc.setDrawColor(0, 87, 184);
+  doc.line(20, yOffset, 190, yOffset);
+  yOffset += 10;
+
+  // Pagination helper
+  function checkPageOverflow(currentY, addition) {
+    if (currentY + addition > 270) {
+      doc.addPage();
+      return 20;
+    }
+    return currentY;
+  }
+
+  // Quiz Questions
+  doc.setFontSize(14);
+  doc.setTextColor(0, 87, 184);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Quiz Questions', 20, yOffset);
+  yOffset += 10;
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont('helvetica', 'normal');
+
+  const questionsToDisplay = selectedQuiz.isPublic && selectedQuiz.questions ? selectedQuiz.questions : quizData.questions;
+  questionsToDisplay.forEach((q, i) => {
+    const maxMarks = q.marks || q.maxMarks || 1;
+    const questionLines = doc.splitTextToSize(`${i + 1}. ${q.text} (${maxMarks} marks)`, 170);
+    yOffset = checkPageOverflow(yOffset, questionLines.length * 5 + 10);
+    doc.text(questionLines, 20, yOffset);
+    yOffset += questionLines.length * 5 + 5;
+
+    if (q.type === 'multiple-choice' && q.options) {
+      q.options.forEach((opt, j) => {
+        const optionLines = doc.splitTextToSize(`  ${String.fromCharCode(97 + j)}. ${opt}`, 165);
+        yOffset = checkPageOverflow(yOffset, optionLines.length * 5);
+        doc.text(optionLines, 25, yOffset);
+        yOffset += optionLines.length * 5;
+      });
+      yOffset = checkPageOverflow(yOffset, 5);
+      doc.text(`  Correct: Option ${q.correct || 'N/A'}`, 25, yOffset);
+      yOffset += 10;
+    } else if (q.type === 'true-false') {
+      yOffset = checkPageOverflow(yOffset, 10);
+      doc.text('  Options: True, False', 25, yOffset);
+      yOffset += 5;
+      doc.text(`  Correct: ${q.correct || 'N/A'}`, 25, yOffset);
+      yOffset += 10;
+    } else if (q.type === 'answer-question') {
+      const answerLines = doc.splitTextToSize(`  Expected Answer: ${q.expectedAnswer || 'N/A'}`, 165);
+      yOffset = checkPageOverflow(yOffset, answerLines.length * 5);
+      doc.text(answerLines, 25, yOffset);
+      yOffset += answerLines.length * 5 + 10;
+    }
+  });
+
+  // Key Insights
+  yOffset = checkPageOverflow(yOffset, 70);
+  doc.setFontSize(14);
+  doc.setTextColor(0, 87, 184);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Key Insights', 20, yOffset);
+  yOffset += 10;
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont('helvetica', 'normal');
+  const insights = [
+    'Class Average: 78% (meets IB Biology standards)',
+    'Performance: 40% Mastery, 45% Developing, 15% Weak',
+    'Progress: 15% average score improvement',
+    'Emotional Insights: 20% showed confusion on Question 3',
+    'Curriculum Gap: Reteach cellular respiration (60% incorrect)',
+    'Certificates: Blockchain-verified for students scoring above 80%'
+  ];
+  insights.forEach((insight) => {
+    const insightLines = doc.splitTextToSize(insight, 170);
+    yOffset = checkPageOverflow(yOffset, insightLines.length * 5);
+    doc.text(insightLines, 20, yOffset);
+    yOffset += insightLines.length * 5 + 5;
+  });
+
+  // Individual Performance
+  yOffset = checkPageOverflow(yOffset, 30 + quizData.studentData.length * 35);
+  doc.setFontSize(14);
+  doc.setTextColor(0, 87, 184);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Individual Performance', 20, yOffset);
+  yOffset += 10;
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont('helvetica', 'normal');
+  quizData.studentData.forEach((student) => {
+    yOffset = checkPageOverflow(yOffset, 25 + quizData.questions.length * 5);
+    doc.text(`${student.name}: ${student.total}/10 (${(student.total / 10 * 100)}%, ${student.category})`, 20, yOffset);
+    yOffset += 5;
+    student.marks.forEach((mark, i) => {
+      doc.text(`  Q${i + 1}: ${mark}/${quizData.questions[i].maxMarks}, Time: ${student.timeTaken[i]}s`, 25, yOffset);
+      yOffset += 5;
+    });
+    yOffset += 5;
+  });
+
+  // Feedback
+  yOffset = checkPageOverflow(yOffset, 100);
+  doc.setFontSize(14);
+  doc.setTextColor(0, 87, 184);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Feedback', 20, yOffset);
+  yOffset += 10;
+  doc.setFontSize(12);
+  doc.setTextColor(0, 87, 184);
+  doc.text('General Feedback', 20, yOffset);
+  yOffset += 10;
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont('helvetica', 'normal');
+  const generalFeedback = [
+    'Class average: 78%; focus on reteaching cellular respiration (Question 3, 60% incorrect).',
+    'EAL Support: 10% of EAL students struggled with terminology; use voice explanations in Arabic/Urdu.'
+  ];
+  generalFeedback.forEach((fb) => {
+    const fbLines = doc.splitTextToSize(fb, 170);
+    yOffset = checkPageOverflow(yOffset, fbLines.length * 5);
+    doc.text(fbLines, 20, yOffset);
+    yOffset += fbLines.length * 5 + 5;
+  });
+
+  yOffset = checkPageOverflow(yOffset, 50);
+  doc.setFontSize(12);
+  doc.setTextColor(0, 87, 184);
+  doc.text('Student-Specific Feedback', 20, yOffset);
+  yOffset += 10;
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
+  const studentFeedback = [
+    'Student A: 90% (Mastery), confident, mastered photosynthesis.',
+    'Student B: 60% (Developing), struggled on Question 3, needs reteaching.',
+    'Student C: 80% (Developing), engaged, recommend advanced questions.'
+  ];
+  studentFeedback.forEach((fb) => {
+    const fbLines = doc.splitTextToSize(fb, 170);
+    yOffset = checkPageOverflow(yOffset, fbLines.length * 5);
+    doc.text(fbLines, 20, yOffset);
+    yOffset += fbLines.length * 5 + 5;
+  });
+
+  // Blockchain Certificates
+  yOffset = checkPageOverflow(yOffset, 50);
+  doc.setFontSize(14);
+  doc.setTextColor(0, 87, 184);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Blockchain Certificates', 20, yOffset);
+  yOffset += 10;
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Certificates issued for: ${certData.students.join(', ')}`, 20, yOffset);
+  yOffset += 10;
+  doc.text(`Certificate ID: ${certData.certId}`, 20, yOffset);
+  yOffset += 10;
+  doc.text(`Transaction Hash: ${certData.txHash}`, 20, yOffset);
+  yOffset += 10;
+
+  // Capture charts
+  const charts = [
+    { id: 'attainmentChart', title: 'Score Distribution' },
+    { id: 'progressChart', title: 'Score Improvement' },
+    { id: 'emotionChart', title: 'Emotional Engagement' },
+    { id: 'studentPerformanceChart', title: 'Performance Categories' }
+  ];
+
+  for (const chart of charts) {
+    const canvas = document.getElementById(chart.id);
+    chartInstances[chart.id].resize(); // Force redraw
+    await new Promise(resolve => setTimeout(resolve, 300)); // Ensure rendering
+    const imgData = await html2canvas(canvas, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff'
+    }).then(canvas => canvas.toDataURL('image/png', 1.0));
+    
+    yOffset = checkPageOverflow(yOffset, 70);
+    doc.setFontSize(12);
+    doc.setTextColor(0, 87, 184);
+    doc.text(chart.title, 20, yOffset);
+    yOffset += 10;
+    doc.addImage(imgData, 'PNG', 20, yOffset, 170, 50);
+    yOffset += 60;
+  }
+
+  // Save PDF
+  doc.save(`BrainJoy_${quizTitle.replace(/\s/g, '_')}_Report.pdf`);
+};
+
+      window.downloadCertificate = function() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const quizTitle = document.getElementById('selectQuiz').options[document.getElementById('selectQuiz').selectedIndex].text;
+        const date = new Date().toLocaleDateString();
+        const studentName = 'Student A';
+        const score = '90%';
+        const certId = '0xabc123';
+        const txHash = '0xdef456';
+
+        doc.setFillColor(0, 87, 184);
+        doc.rect(0, 0, 210, 297, 'F');
+        doc.setFillColor(255, 255, 255);
+        doc.rect(10, 10, 190, 277, 'F');
+        doc.setDrawColor(0, 123, 255);
+        doc.setLineWidth(2);
+        doc.rect(15, 15, 180, 267);
+        doc.setFont('Roboto', 'normal', '700');
+        doc.setFontSize(24);
+        doc.setTextColor(0, 87, 184);
+        doc.text('Certificate of Achievement', 105, 50, { align: 'center' });
+        doc.setFontSize(16);
+        doc.text('BrainJoy Education Platform', 105, 70, { align: 'center' });
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`This certifies that`, 105, 90, { align: 'center' });
+        doc.setFontSize(18);
+        doc.setTextColor(0, 87, 184);
+        doc.text(studentName, 105, 110, { align: 'center' });
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`has successfully completed the`, 105, 130, { align: 'center' });
+        doc.setFontSize(14);
+        doc.setTextColor(0, 87, 184);
+        doc.text(quizTitle, 105, 150, { align: 'center' });
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`with a score of ${score}`, 105, 170, { align: 'center' });
+        doc.text(`Date: ${date}`, 105, 190, { align: 'center' });
+        doc.text(`Blockchain Verification ID: ${certId}`, 105, 210, { align: 'center' });
+        doc.text(`Transaction Hash: ${txHash}`, 105, 230, { align: 'center' });
+        doc.setFontSize(10);
+        doc.text('Verified by BrainJoy Education', 105, 250, { align: 'center' });
+        doc.setLineWidth(1);
+        doc.line(80, 260, 130, 260);
+        doc.text('Authorized Signature', 105, 270, { align: 'center' });
+        doc.save(`BrainJoy_${studentName.replace(/\s/g, '_')}_${quizTitle.replace(/\s/g, '_')}_Certificate.pdf`);
+      };
+
+      // Initialize charts on page load
+      generateReport();
+    });
+  </script>
+</body>
+</html>
+```

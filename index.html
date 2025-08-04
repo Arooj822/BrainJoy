@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<head>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BrainJoy | Home</title>
+  <style>
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+      min-height: 100vh;
+      margin: 0;
+    }
+    .hero {
+      text-align: center;
+      padding: 60px 20px 30px 20px;
+      position: relative;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      color: #004d99;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+    .hero p {
+      font-size: 1.3rem;
+      color: #333;
+      margin-bottom: 30px;
+    }
+    .hero .lottie-anim {
+      margin: 0 auto 30px auto;
+      display: block;
+      max-width: 220px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .buttons a, .buttons button {
+      background: #ff4ea1;
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      box-shadow: 0 4px 16px rgba(255,78,161,0.12);
+      cursor: pointer;
+      outline: none;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    .buttons a:hover, .buttons button:hover {
+      background: #bfff00;
+      color: #003366;
+      transform: translateY(-4px) scale(1.06);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+    }
+    .resource-links {
+      background: rgba(255,255,255,0.85);
+      border-radius: 14px;
+      margin: 40px auto 0 auto;
+      max-width: 900px;
+      padding: 32px 20px 24px 20px;
+      box-shadow: 0 4px 24px rgba(44,62,80,0.08);
+      text-align: center;
+    }
+    .resource-links h2 {
+      color: #ff4ea1;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+    .resource-links .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    .resource-button {
+      background: #fff0f6;
+      color: #ff4ea1;
+      border: 2px solid #ff4ea1;
+      border-radius: 20px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border 0.2s, transform 0.2s;
+      box-shadow: 0 2px 8px rgba(255,78,161,0.08);
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    .resource-button:hover {
+      background: #ff4ea1;
+      color: #fff;
+      border: 2px solid #bfff00;
+      transform: scale(1.05);
+    }
+    footer {
+      text-align: center;
+      color: #003366;
+      background: rgba(255,255,255,0.7);
+      padding: 18px 0 10px 0;
+      font-size: 1rem;
+      margin-top: 40px;
+      border-radius: 12px 12px 0 0;
+      box-shadow: 0 -2px 12px rgba(44,62,80,0.06);
+    }
+    /* Features section styles */
+    #features {
+      display: none; /* hidden by default */
+      background:#fff0f6;
+      padding:50px 20px;
+      max-width:1200px;
+      margin:40px auto;
+      border-radius:12px;
+      box-shadow:0 4px 15px rgba(255,78,161,0.3);
+      font-family:'Montserrat', Arial, sans-serif;
+    }
+    #features h2 {
+      text-align:center; 
+      color:#ff4ea1; 
+      font-size:2.5rem; 
+      margin-bottom:40px;
+    }
+    #features .features-grid {
+      display:grid; 
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); 
+      gap:30px;
+    }
+    #features .feature-item {
+      background:#fff; 
+      border-radius:12px; 
+      padding:25px; 
+      text-align:center; 
+      box-shadow: 0 4px 15px rgba(255,78,161,0.3);
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    #features[aria-hidden="false"] .feature-item {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.2s;
+    }
+    #features .feature-icon {
+      font-size:3rem; 
+      color:#ff7eb9; 
+      margin-bottom:15px;
+    }
+    #features .feature-title {
+      color:#ff4ea1; 
+      margin-bottom:12px; 
+      font-size:1.3rem; 
+      font-weight:600;
+    }
+    #features .feature-desc {
+      color:#333; 
+      font-size:1rem;
+    }
+    @media (max-width: 700px) {
+      .hero h1 { font-size: 2rem; }
+      .resource-links { padding: 18px 6px; }
+      #features { padding: 20px 4px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <div class="logo" style="display: flex; align-items: center; gap: 8px;">
+      <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2FqNWJydDk2ODdmd3RhYTVtaXZtaTdxbmxndDhxNzFnZjF0MmJldiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RMrcIFlXAGlhlxL0eH/giphy.gif" alt="Brain GIF" style="width:48px; height:48px;">
+      <span>Brain<span style="color:#bfff00;">Joy</span></span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#features" id="featuresToggle">Features</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="home" class="hero" data-aos="fade-up" style="overflow: hidden; min-height: 350px;">
+  <!-- Swinging brain animation -->
+  <div id="swing-container" style="width: 120px; margin: 0 auto;">
+    <img
+      id="swing-brain"
+      src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2FqNWJydDk2ODdmd3RhYTVtaXZtaTdxbmxndDhxNzFnZjF0MmJldiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RMrcIFlXAGlhlxL0eH/giphy.gif"
+      alt="Swinging Brain"
+      style="width: 120px; height: 120px; transform-origin: top center;"
+    />
+    <div id="rope" style="width: 4px; height: 60px; background: #bfff00; position: absolute; left: 50%; top: 0; transform: translateX(-50%); z-index: -1;"></div>
+  </div>
+  <h1 id="welcome-text" style="opacity: 0; transition: opacity 1s;">Welcome to BrainJoy!</h1>
+  <p>Your global learning adventure begins here! ✨</p>
+  <div class="buttons">
+    <a href="teacher-login-form.html" class="login teacher">Login as Teacher</a>
+    <a href="student-login.html">
+      <button>Login as Student</button>
+    </a>
+    <a href="#" class="login parent">Login as Parent</a>
+  </div>
+</section>
+
+<style>
+  #swing-container {
+    position: relative;
+    height: 180px;
+  }
+  #rope {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4px;
+    height: 60px;
+    background: #bfff00;
+    transform: translateX(-50%);
+    z-index: 0;
+  }
+  #swing-brain {
+    animation: swing 2s cubic-bezier(.36,.07,.19,.97) 1;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  @keyframes swing {
+    0% { transform: rotate(-60deg); }
+    60% { transform: rotate(30deg); }
+    80% { transform: rotate(-15deg);}
+    100% { transform: rotate(0deg);}
+  }
+</style>
+<script>
+  // Fade in welcome text after swing
+  window.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+      document.getElementById('welcome-text').style.opacity = 1;
+    }, 1800);
+  });
+</script>
+
+  <div class="resource-links" data-aos="fade-up">
+    <h2>🎒 Resource Center</h2>
+    <p>Explore and create resources for students around the world!</p>
+    <div class="button-row">
+      <a href="users/free Resources/upload.html" class="resource-button free">🆓 Free Resources</a>
+      <a href="users/Paid Resources/paid-resources.html" class="resource-button paid">💰 Paid Resources</a>
+      <a href="users/Buyers/buyers-dashboard.html" class="resource-button buyer">🔐 Buyer Dashboard</a>
+      <a href="users/sellers/upload.html" class="resource-button seller">🧑‍🏫 Seller Portal</a>
+    </div>
+  </div>
+
+  <!-- Added Features section here, hidden by default -->
+  <section id="features" aria-hidden="true" data-aos="fade-up">
+    <h2>Why Choose BrainJoy?</h2>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">📚</div>
+        <div class="feature-title">Wide Range of Resources</div>
+        <div class="feature-desc">Explore content for all grades & curricula worldwide — EYFS, Montessori, IB, AP, CBSE, and more.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-title">Easy Filtering & Search</div>
+        <div class="feature-desc">Find resources fast with filters by subject, curriculum, grade, and keyword search.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🎓</div>
+        <div class="feature-title">Verified & Trusted Teachers</div>
+        <div class="feature-desc">All resources are created and approved by qualified, experienced educators.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">👀</div>
+        <div class="feature-title">Interactive Previews</div>
+        <div class="feature-desc">Preview resources for free to ensure they meet your needs before purchasing.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">💰</div>
+        <div class="feature-title">Bundles & Discounts</div>
+        <div class="feature-desc">Buy bundles of related resources at discounted prices to save more.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-title">Safe & Secure Payments</div>
+        <div class="feature-desc">Enjoy smooth, trusted transactions via popular payment gateways.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🤝</div>
+        <div class="feature-title">Teacher Uploads & Revenue Sharing</div>
+        <div class="feature-desc">Empower educators to upload content and earn from their creations.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🧠</div>
+        <div class="feature-title">Personalized Recommendations</div>
+        <div class="feature-desc">AI-curated suggestions based on your learning preferences and history.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🎮</div>
+        <div class="feature-title">Multi-format Resources</div>
+        <div class="feature-desc">Access PDFs, videos, quizzes, and interactive games for better learning.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">User-Friendly Dashboard</div>
+        <div class="feature-desc">Easily track your purchases, favorites, and learning progress all in one place.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 BrainJoy. Learn. Create. Connect.</p>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggleBtn = document.getElementById('featuresToggle');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', function(e){
+          e.preventDefault();
+          const features = document.getElementById('features');
+          if(features.style.display === 'block'){
+            features.style.display = 'none';
+            features.setAttribute('aria-hidden', 'true');
+          } else {
+            features.style.display = 'block';
+            features.setAttribute('aria-hidden', 'false');
+            features.scrollIntoView({behavior:'smooth'});
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
